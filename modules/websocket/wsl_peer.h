@@ -39,7 +39,7 @@
 #include "core/ring_buffer.h"
 #include "packet_buffer.h"
 #include "websocket_peer.h"
-#include "wslay/wslay.h"
+#include "thirdparty/wslay/includes/wslay/wslay.h"
 
 #define WSL_MAX_HEADER_SIZE 4096
 

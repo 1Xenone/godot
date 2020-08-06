@@ -29,7 +29,7 @@
 #  include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#include <wslay/wslay.h>
+#include "thirdparty/wslay/includes/wslay/wslay.h"
 
 struct wslay_stack_cell {
   void *data;

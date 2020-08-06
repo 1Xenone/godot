@@ -46,7 +46,7 @@ typedef SSIZE_T ssize_t;
  * WSLAY_VERSION macro from outside to avoid to generating wslayver.h
  */
 #ifndef WSLAY_VERSION
-#  include <wslay/wslayver.h>
+#include "thirdparty/wslay/includes/wslay/wslay.h"
 #endif /* WSLAY_VERSION */
 
 enum wslay_error {

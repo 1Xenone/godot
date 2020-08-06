@@ -38,7 +38,8 @@
 #include "core/io/stream_peer_tcp.h"
 #include "websocket_client.h"
 #include "wsl_peer.h"
-#include "wslay/wslay.h"
+#include "thirdparty/wslay/includes/wslay/wslay.h"
+
 
 class WSLClient : public WebSocketClient {
 	GDCIIMPL(WSLClient, WebSocketClient);

@@ -29,7 +29,8 @@
 #  include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include <wslay/wslay.h>
+#include "thirdparty/wslay/includes/wslay/wslay.h"
+
 
 #ifdef HAVE_ARPA_INET_H
 #  include <arpa/inet.h>

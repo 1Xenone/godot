@@ -29,7 +29,8 @@
 #  include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include <wslay/wslay.h>
+#include "thirdparty/wslay/includes/wslay/wslay.h"
+
 
 enum wslay_frame_state {
   PREP_HEADER,
