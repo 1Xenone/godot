@@ -16,6 +16,8 @@ while IFS= read -rd '' f; do
         continue
     elif [[ "$f" == "platform/android/java/lib/src/com/google"* ]]; then
         continue
+    elif [[ "$f" == *"-so_wrap."* ]]; then
+        continue
     fi
 
     for extension in ${CLANG_FORMAT_FILE_EXTS[@]}; do
@@ -39,11 +41,9 @@ while IFS= read -rd '' f; do
 done
 
 git diff > patch.patch
-FILESIZE="$(stat -c%s patch.patch)"
-MAXSIZE=5
 
 # If no patch has been generated all is OK, clean up, and exit.
-if (( FILESIZE < MAXSIZE )); then
+if [ ! -s patch.patch ] ; then
     printf "Files in this commit comply with the clang-format style rules.\n"
     rm -f patch.patch
     exit 0

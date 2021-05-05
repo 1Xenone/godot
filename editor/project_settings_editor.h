@@ -5,8 +5,8 @@
 /*                           GODOT ENGINE                                */
 /*                      https://godotengine.org                          */
 /*************************************************************************/
-/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
+/* Copyright (c) 2007-2021 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2021 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -31,82 +31,82 @@
 #ifndef PROJECT_SETTINGS_EDITOR_H
 #define PROJECT_SETTINGS_EDITOR_H
 
-#include "core/undo_redo.h"
+#include "core/object/undo_redo.h"
+#include "editor/action_map_editor.h"
 #include "editor/editor_data.h"
 #include "editor/editor_plugin_settings.h"
 #include "editor/editor_sectioned_inspector.h"
+#include "editor/import_defaults_editor.h"
+#include "editor/localization_editor.h"
+#include "editor/shader_globals_editor.h"
 #include "editor_autoload_settings.h"
-#include "input_map_editor.h"
-#include "localization_editor.h"
-#include "scene/gui/dialogs.h"
 #include "scene/gui/tab_container.h"
-#include "shader_globals_editor.h"
 
 class ProjectSettingsEditor : public AcceptDialog {
 	GDCLASS(ProjectSettingsEditor, AcceptDialog);
 
-	enum InputType {
-		INPUT_KEY,
-		INPUT_KEY_PHYSICAL,
-		INPUT_JOY_BUTTON,
-		INPUT_JOY_MOTION,
-		INPUT_MOUSE_BUTTON
-	};
-
-	TabContainer *tab_container;
-	AcceptDialog *message;
+	static ProjectSettingsEditor *singleton;
+	ProjectSettings *ps;
 	Timer *timer;
 
-	HBoxContainer *search_bar;
-	Button *search_button;
-	LineEdit *search_box;
-	HBoxContainer *add_prop_bar;
-	LineEdit *category;
-	LineEdit *property;
-	OptionButton *type;
-
-	SectionedInspector *globals_editor;
-
-	MenuButton *popup_copy_to_feature;
-
-	InputMapEditor *inputmap_editor;
+	TabContainer *tab_container;
+	SectionedInspector *inspector;
 	LocalizationEditor *localization_editor;
 	EditorAutoloadSettings *autoload_settings;
 	ShaderGlobalsEditor *shaders_global_variables_editor;
 	EditorPluginSettings *plugin_settings;
+
+	ActionMapEditor *action_map;
+	HBoxContainer *search_bar;
+	LineEdit *search_box;
+	CheckButton *advanced;
+
+	HBoxContainer *advanced_bar;
+	LineEdit *category_box;
+	LineEdit *property_box;
+	Button *add_button;
+	Button *del_button;
+	OptionButton *type;
+	OptionButton *feature_override;
+
+	ConfirmationDialog *del_confirmation;
 
 	Label *restart_label;
 	TextureRect *restart_icon;
 	PanelContainer *restart_container;
 	Button *restart_close_button;
 
+	ImportDefaultsEditor *import_defaults_editor;
 	EditorData *data;
 	UndoRedo *undo_redo;
 
-	void _item_selected(const String &);
-	void _item_adds(String);
-	void _item_add();
-	void _item_del();
-	void _save();
+	void _advanced_pressed();
+	void _update_advanced_bar();
+	void _text_field_changed(const String &p_text);
+	void _feature_selected(int p_index);
 
-	void _settings_prop_edited(const String &p_name);
-	void _settings_changed();
-
-	void _copy_to_platform(int p_which);
-	void _copy_to_platform_about_to_show();
-
-	void _toggle_search_bar(bool p_pressed);
-
-	ProjectSettingsEditor();
-
-	static ProjectSettingsEditor *singleton;
+	String _get_setting_name() const;
+	void _setting_edited(const String &p_name);
+	void _setting_selected(const String &p_path);
+	void _add_setting();
+	void _delete_setting(bool p_confirmed);
 
 	void _editor_restart_request();
 	void _editor_restart();
 	void _editor_restart_close();
 
+	void _add_feature_overrides();
+
+	void _action_added(const String &p_name);
+	void _action_edited(const String &p_name, const Dictionary &p_action);
+	void _action_removed(const String &p_name);
+	void _action_renamed(const String &p_old_name, const String &p_new_name);
+	void _action_reordered(const String &p_action_name, const String &p_relative_to, bool p_before);
+	void _update_action_map_editor();
+
+	ProjectSettingsEditor();
+
 protected:
-	void _unhandled_input(const Ref<InputEvent> &p_event);
 	void _notification(int p_what);
 	static void _bind_methods();
 
@@ -117,8 +117,7 @@ public:
 	void update_plugins();
 
 	EditorAutoloadSettings *get_autoload_settings() { return autoload_settings; }
-
-	TabContainer *get_tabs();
+	TabContainer *get_tabs() { return tab_container; }
 
 	void queue_save();
 

@@ -5,8 +5,8 @@
 /*                           GODOT ENGINE                                */
 /*                      https://godotengine.org                          */
 /*************************************************************************/
-/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
+/* Copyright (c) 2007-2021 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2021 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -164,7 +164,7 @@ void AreaBullet::main_shape_changed() {
 	btGhost->setCollisionShape(get_main_shape());
 }
 
-void AreaBullet::do_reload_body() {
+void AreaBullet::reload_body() {
 	if (space) {
 		space->remove_area(this);
 		space->add_area(this);
@@ -178,15 +178,13 @@ void AreaBullet::set_space(SpaceBullet *p_space) {
 		isScratched = false;
 
 		// Remove this object form the physics world
-		space->unregister_collision_object(this);
 		space->remove_area(this);
 	}
 
 	space = p_space;
 
 	if (space) {
-		space->register_collision_object(this);
-		reload_body();
+		space->add_area(this);
 	}
 }
 

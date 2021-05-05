@@ -5,8 +5,8 @@
 /*                           GODOT ENGINE                                */
 /*                      https://godotengine.org                          */
 /*************************************************************************/
-/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
+/* Copyright (c) 2007-2021 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2021 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -42,7 +42,6 @@ class StreamPeerTCP : public StreamPeer {
 
 public:
 	enum Status {
-
 		STATUS_NONE,
 		STATUS_CONNECTING,
 		STATUS_CONNECTED,
@@ -66,10 +65,12 @@ protected:
 public:
 	void accept_socket(Ref<NetSocket> p_sock, IP_Address p_host, uint16_t p_port);
 
-	Error connect_to_host(const IP_Address &p_host, uint16_t p_port);
+	Error bind(int p_port, const IP_Address &p_host);
+	Error connect_to_host(const IP_Address &p_host, int p_port);
 	bool is_connected_to_host() const;
 	IP_Address get_connected_host() const;
-	uint16_t get_connected_port() const;
+	int get_connected_port() const;
+	int get_local_port() const;
 	void disconnect_from_host();
 
 	int get_available_bytes() const override;

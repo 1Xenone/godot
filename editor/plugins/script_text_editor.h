@@ -5,8 +5,8 @@
 /*                           GODOT ENGINE                                */
 /*                      https://godotengine.org                          */
 /*************************************************************************/
-/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
+/* Copyright (c) 2007-2021 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2021 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -39,8 +39,8 @@
 class ConnectionInfoDialog : public AcceptDialog {
 	GDCLASS(ConnectionInfoDialog, AcceptDialog);
 
-	Label *method;
-	Tree *tree;
+	Label *method = nullptr;
+	Tree *tree = nullptr;
 
 	virtual void ok_pressed() override;
 
@@ -53,11 +53,12 @@ public:
 class ScriptTextEditor : public ScriptEditorBase {
 	GDCLASS(ScriptTextEditor, ScriptEditorBase);
 
-	CodeTextEditor *code_editor;
-	RichTextLabel *warnings_panel;
+	CodeTextEditor *code_editor = nullptr;
+	RichTextLabel *warnings_panel = nullptr;
 
 	Ref<Script> script;
-	bool script_is_valid;
+	bool script_is_valid = false;
+	bool editor_enabled = false;
 
 	Vector<String> functions;
 
@@ -65,25 +66,35 @@ class ScriptTextEditor : public ScriptEditorBase {
 
 	Vector<String> member_keywords;
 
-	HBoxContainer *edit_hb;
+	HBoxContainer *edit_hb = nullptr;
 
-	MenuButton *edit_menu;
-	MenuButton *search_menu;
-	PopupMenu *bookmarks_menu;
-	PopupMenu *breakpoints_menu;
-	PopupMenu *highlighter_menu;
-	PopupMenu *context_menu;
+	MenuButton *edit_menu = nullptr;
+	MenuButton *search_menu = nullptr;
+	MenuButton *goto_menu = nullptr;
+	PopupMenu *bookmarks_menu = nullptr;
+	PopupMenu *breakpoints_menu = nullptr;
+	PopupMenu *highlighter_menu = nullptr;
+	PopupMenu *context_menu = nullptr;
+	PopupMenu *convert_case = nullptr;
 
-	GotoLineDialog *goto_line_dialog;
-	ScriptEditorQuickOpen *quick_open;
-	ConnectionInfoDialog *connection_info_dialog;
+	GotoLineDialog *goto_line_dialog = nullptr;
+	ScriptEditorQuickOpen *quick_open = nullptr;
+	ConnectionInfoDialog *connection_info_dialog = nullptr;
 
-	PopupPanel *color_panel;
-	ColorPicker *color_picker;
+	int connection_gutter = -1;
+	void _gutter_clicked(int p_line, int p_gutter);
+	void _update_gutter_indexes();
+
+	int line_number_gutter = -1;
+	Color default_line_number_color = Color(1, 1, 1);
+	Color safe_line_number_color = Color(1, 1, 1);
+
+	PopupPanel *color_panel = nullptr;
+	ColorPicker *color_picker = nullptr;
 	Vector2 color_position;
 	String color_args;
 
-	bool theme_loaded;
+	bool theme_loaded = false;
 
 	enum {
 		EDIT_UNDO,
@@ -132,6 +143,8 @@ class ScriptTextEditor : public ScriptEditorBase {
 		LOOKUP_SYMBOL,
 	};
 
+	void _enable_code_editor();
+
 protected:
 	void _update_breakpoint_list();
 	void _breakpoint_item_pressed(int p_idx);
@@ -165,8 +178,6 @@ protected:
 	void _lookup_symbol(const String &p_symbol, int p_row, int p_column);
 	void _validate_symbol(const String &p_symbol);
 
-	void _lookup_connections(int p_row, String p_method);
-
 	void _convert_case(CodeTextEditor::CaseStyle p_case);
 
 	Variant get_drag_data_fw(const Point2 &p_point, Control *p_from);
@@ -185,6 +196,7 @@ public:
 	virtual void apply_code() override;
 	virtual RES get_edited_resource() const override;
 	virtual void set_edited_resource(const RES &p_res) override;
+	virtual void enable_editor() override;
 	virtual Vector<String> get_functions() override;
 	virtual void reload_text() override;
 	virtual String get_name() override;
@@ -206,7 +218,7 @@ public:
 	virtual void clear_executing_line() override;
 
 	virtual void reload(bool p_soft) override;
-	virtual void get_breakpoints(List<int> *p_breakpoints) override;
+	virtual Array get_breakpoints() override;
 
 	virtual void add_callback(const String &p_function, PackedStringArray p_args) override;
 	virtual void update_settings() override;

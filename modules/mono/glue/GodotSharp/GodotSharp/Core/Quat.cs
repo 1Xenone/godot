@@ -120,13 +120,13 @@ namespace Godot
         /// <param name="b">The destination quaternion.</param>
         /// <param name="preA">A quaternion before this quaternion.</param>
         /// <param name="postB">A quaternion after `b`.</param>
-        /// <param name="t">A value on the range of 0.0 to 1.0, representing the amount of interpolation.</param>
+        /// <param name="weight">A value on the range of 0.0 to 1.0, representing the amount of interpolation.</param>
         /// <returns>The interpolated quaternion.</returns>
-        public Quat CubicSlerp(Quat b, Quat preA, Quat postB, real_t t)
+        public Quat CubicSlerp(Quat b, Quat preA, Quat postB, real_t weight)
         {
-            real_t t2 = (1.0f - t) * t * 2f;
-            Quat sp = Slerp(b, t);
-            Quat sq = preA.Slerpni(postB, t);
+            real_t t2 = (1.0f - weight) * weight * 2f;
+            Quat sp = Slerp(b, weight);
+            Quat sq = preA.Slerpni(postB, weight);
             return sp.Slerpni(sq, t2);
         }
 
@@ -299,7 +299,7 @@ namespace Godot
         /// Returns a vector transformed (multiplied) by this quaternion.
         /// </summary>
         /// <param name="v">A vector to transform.</param>
-        /// <returns>The transfomed vector.</returns>
+        /// <returns>The transformed vector.</returns>
         public Vector3 Xform(Vector3 v)
         {
 #if DEBUG

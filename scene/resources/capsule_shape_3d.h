@@ -5,8 +5,8 @@
 /*                           GODOT ENGINE                                */
 /*                      https://godotengine.org                          */
 /*************************************************************************/
-/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
+/* Copyright (c) 2007-2021 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2021 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -35,8 +35,8 @@
 
 class CapsuleShape3D : public Shape3D {
 	GDCLASS(CapsuleShape3D, Shape3D);
-	float radius;
-	float height;
+	float radius = 1.0;
+	float height = 1.0;
 
 protected:
 	static void _bind_methods();
@@ -49,7 +49,7 @@ public:
 	void set_height(float p_height);
 	float get_height() const;
 
-	virtual Vector<Vector3> get_debug_mesh_lines() override;
+	virtual Vector<Vector3> get_debug_mesh_lines() const override;
 	virtual real_t get_enclosing_radius() const override;
 
 	CapsuleShape3D();
