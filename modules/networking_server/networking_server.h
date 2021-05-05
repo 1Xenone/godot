@@ -12,14 +12,27 @@ class NetworkingServer : public Node
 public:
 	NetworkingServer();
 
+	void poll();
+
 protected:
 	static void _bind_methods();
 
 private:
-	void _on_task_requested(int id);
+	void Ready();
+
+	void _on_task_requested(int32_t id);
+
+	void _peer_connected(int p_id, String _protocol);
+	void _peer_disconnected(int p_id, bool p_was_clean);
+
+	void SendTask(int32_t id, CharString cs);
 
 
 	Ref<WebSocketServer> ws_server;
+
+	int peerId = 0;
+	
+	const int PORT = 1234;
 };
 
 #endif

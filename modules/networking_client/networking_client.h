@@ -12,9 +12,13 @@ class NetworkingClient : public Node {
 public:
 	NetworkingClient();
 
+	void Ready();
+
 	void SendTaskToServer();
 
 	void RecieveResult();
+
+	void poll();
 
 protected:
 	static void _bind_methods();
@@ -26,19 +30,23 @@ private:
 
 	void _request_player_task(String taskID);
 
-	void _http_player_task_recieved(int p_status, int p_code, const PackedStringArray& headers, const PackedByteArray& p_data);
+	void _player_task_recieved();
 
-	void _on_connected_to_server();
+	void _on_connected_to_server(String protocol);
 
-	Dictionary _get_dictionary_from_http_request(int p_status, int p_code, const PackedByteArray& p_data);
+	Dictionary _get_result_from_http_request(int p_status, int p_code, const PackedByteArray& p_data);
 
-	HTTPRequest *siteDownload;
+	HTTPRequest *m_siteDownload;
 
 	Ref<WebSocketClient> ws_client;
+	Ref<WebSocketPeer> ws_peer;
 
-	const String playerID;
+	bool m_requestLvl = false;
+	bool m_waitingForLvl = false;
 
-	const String siteAdress = "https://example.org/";
+	const String playerID = "1";
+
+	const String siteAdress = "https://4ff31b69-aab3-4926-8580-ad11dc238177.mock.pstmn.io/user";
 
 	// TODO: move to separate class
 	String taskID;
