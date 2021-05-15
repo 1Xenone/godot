@@ -1,0 +1,6 @@
+3844edc3d1660e6e25a999aafc25a878
+::res://::1620225338
+default_env.tres::Environment::1620220164::0::1::::<><>::
+FirstClientScene.tscn::PackedScene::1620224732::0::1::::<><>::res://GetLessonID.gd
+GetLessonID.gd::GDScript::1620220061::0::1::::<>Node<>::
+icon.png::StreamTexture2D::1620217665::1620224723::1::::<><>::
