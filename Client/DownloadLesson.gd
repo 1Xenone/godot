@@ -2,29 +2,15 @@
 extends Node
 signal lesson_downloaded(lessonName)
 
-var port = 1236
-var ip = "127.0.0.1"
 
-var lessonsFolder = "res://ClientFolder/"
-
-var client
+var client = StreamPeerTCP.new()
 var wrapped_client
+
+var requestedLessonName
+
 var is_ready = false
 
-var internalLessonName
-
 func start():
-	client = StreamPeerTCP.new()
-	file = File.new()
-	
-	var error = client.connect_to_host(ip, port)
-	if error != 0:
-		push_error("Error on connecting to host: %s" % error)
-	
-	if client.is_connected_to_host():
-		wrapped_client = PacketPeerStream.new()
-		wrapped_client.set_stream_peer(client)
-	
 	is_ready = true
 
 
@@ -33,37 +19,38 @@ func _process(_delta):
 		poll_server()
 
 
-var file
+var file = File.new()
 func poll_server():	
 	while wrapped_client.get_available_packet_count() > 0:
 		# check for existing file with file.file_exists
 		if(!file.is_open()):
 			var msg = wrapped_client.get_var()
-			var error = wrapped_client.get_packet_error()
-			if error != 0:
-				push_error("Error on packet get: %s" % error)
+			err(wrapped_client.get_packet_error())
 			
-			file.open(lessonsFolder + msg, File.WRITE)
+			file.open(GV.lessonsClientFolder + msg, File.WRITE)
 		else:
 			var data = wrapped_client.get_packet()
 			print("Client: Get file data")
-			var error = wrapped_client.get_packet_error()
-			if error != 0:
-				push_error("Error on packet get: %s" % error)
+			err(wrapped_client.get_packet_error())
 			
 			file.store_buffer(data)
 			file.close()
 			
-			emit_signal("lesson_downloaded", internalLessonName)
+			emit_signal("lesson_downloaded", requestedLessonName)
 
 
 func _on_OpenLesson_download_lesson(lessonName):
-	internalLessonName = lessonName
+	requestedLessonName = lessonName
+	
+	err(client.connect_to_host(GV.address, GV.port))
+	
 	if client.is_connected_to_host():
-		client.put_string(internalLessonName)
-	var error = wrapped_client.get_packet_error()
-	if error != 0:
-		push_error("Error on packet put: %s" % error)
+		wrapped_client = PacketPeerStream.new()
+		wrapped_client.set_stream_peer(client)
+		
+		client.put_string(requestedLessonName)
+	
+	err(wrapped_client.get_packet_error())
 
 
 func _on_ToolsButton_restart_tools():

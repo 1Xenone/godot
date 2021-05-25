@@ -17,3 +17,7 @@ _global_script_class_icons={
 config/name="Client"
 run/main_scene="res://FirstClientScene.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+GV="*res://GlobalVariables.gd"

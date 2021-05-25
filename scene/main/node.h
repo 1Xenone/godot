@@ -332,6 +332,7 @@ public:
 	bool is_physics_processing() const;
 
 	void set_process(bool p_idle_process);
+	void error(int error_code);
 	float get_process_delta_time() const;
 	bool is_processing() const;
 

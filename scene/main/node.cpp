@@ -807,6 +807,21 @@ void Node::set_process(bool p_idle_process) {
 	_change_notify("idle_process");
 }
 
+void Node::error(int error_code)
+{
+	if (error_code != 0)
+	{
+		if (error_code < 0 || error_code >= ERR_MAX)
+		{
+			ERR_PRINT(vformat("push_error_formatted: Invalid error code: %d", error_code));
+		}
+		else
+		{
+			ERR_PRINT(vformat("path: %s: %s", get_path(), error_names[error_code]));
+		}
+	}
+}
+
 bool Node::is_processing() const {
 
 	return data.idle_process;
@@ -2827,6 +2842,7 @@ void Node::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_physics_processing"), &Node::is_physics_processing);
 	ClassDB::bind_method(D_METHOD("get_process_delta_time"), &Node::get_process_delta_time);
 	ClassDB::bind_method(D_METHOD("set_process", "enable"), &Node::set_process);
+	ClassDB::bind_method(D_METHOD("err", "error_code"), &Node::error);
 	ClassDB::bind_method(D_METHOD("set_process_priority", "priority"), &Node::set_process_priority);
 	ClassDB::bind_method(D_METHOD("get_process_priority"), &Node::get_process_priority);
 	ClassDB::bind_method(D_METHOD("is_processing"), &Node::is_processing);
