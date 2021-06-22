@@ -1,0 +1,326 @@
+[gd_scene load_steps=25 format=2]
+
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Fire/2.png" type="Texture" id=1]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/Level/Spacecraft.gd" type="Script" id=2]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Fire/4.png" type="Texture" id=3]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Fire/1.png" type="Texture" id=4]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Fire/1f.png" type="Texture" id=5]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Fire/2f.png" type="Texture" id=6]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Terrain/terrainAtlas.png" type="Texture" id=7]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/Level/SpacecraftController.gd" type="Script" id=8]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Fire/3.png" type="Texture" id=9]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Fire/3f.png" type="Texture" id=10]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/Fire/4f.png" type="Texture" id=11]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/Level/Finish.gd" type="Script" id=12]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/Level/Ground.gd" type="Script" id=13]
+[ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/Ship.tres" type="Resource" id=14]
+[ext_resource path="res://Lessons/MarsLanding/Graphics/kisspng-clip-art-portable-network-graphics-explosion-trans-explosion-clipart-softball-free-clipart-on-5ccf6a80ee7d09.7609118515570970889769.png" type="Texture" id=15]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/Learner/UserScript.cs" type="Script" id=16]
+[ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/Lvl1.tres" type="Resource" id=17]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/Level/UI.gd" type="Script" id=18]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 134.802, 26.7485 )
+
+[sub_resource type="ConvexPolygonShape2D" id=2]
+points = PoolVector2Array( 133, 133, 0, 133, 0, 0, 133, 0 )
+
+[sub_resource type="TileSet" id=3]
+0/name = "terrainAtlas.png 0"
+0/texture = ExtResource( 7 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 133, 133 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
+1/name = "terrainAtlas.png 1"
+1/texture = ExtResource( 7 )
+1/tex_offset = Vector2( 0, 0 )
+1/modulate = Color( 1, 1, 1, 1 )
+1/region = Rect2( 0, 280, 133, 133 )
+1/tile_mode = 0
+1/occluder_offset = Vector2( 0, 0 )
+1/navigation_offset = Vector2( 0, 0 )
+1/shape_offset = Vector2( 0, 0 )
+1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+1/shape_one_way = false
+1/shape_one_way_margin = 0.0
+1/shapes = [  ]
+1/z_index = 0
+2/name = "terrainAtlas.png 2"
+2/texture = ExtResource( 7 )
+2/tex_offset = Vector2( 0, 0 )
+2/modulate = Color( 1, 1, 1, 1 )
+2/region = Rect2( 0, 140, 133, 133 )
+2/tile_mode = 0
+2/occluder_offset = Vector2( 0, 0 )
+2/navigation_offset = Vector2( 0, 0 )
+2/shape_offset = Vector2( 0, 0 )
+2/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+2/shape_one_way = false
+2/shape_one_way_margin = 0.0
+2/shapes = [  ]
+2/z_index = 0
+3/name = "terrainAtlas.png 3"
+3/texture = ExtResource( 7 )
+3/tex_offset = Vector2( 0, 0 )
+3/modulate = Color( 1, 1, 1, 1 )
+3/region = Rect2( 140, 0, 133, 133 )
+3/tile_mode = 0
+3/occluder_offset = Vector2( 0, 0 )
+3/navigation_offset = Vector2( 0, 0 )
+3/shape_offset = Vector2( 0, 0 )
+3/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+3/shape_one_way = false
+3/shape_one_way_margin = 0.0
+3/shapes = [  ]
+3/z_index = 0
+4/name = "terrainAtlas.png 4"
+4/texture = ExtResource( 7 )
+4/tex_offset = Vector2( 0, 0 )
+4/modulate = Color( 1, 1, 1, 1 )
+4/region = Rect2( 140, 140, 133, 133 )
+4/tile_mode = 0
+4/occluder_offset = Vector2( 0, 0 )
+4/navigation_offset = Vector2( 0, 0 )
+4/shape_offset = Vector2( 0, 0 )
+4/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+4/shape_one_way = false
+4/shape_one_way_margin = 0.0
+4/shapes = [  ]
+4/z_index = 0
+5/name = "terrainAtlas.png 5"
+5/texture = ExtResource( 7 )
+5/tex_offset = Vector2( 0, 0 )
+5/modulate = Color( 1, 1, 1, 1 )
+5/region = Rect2( 280, 0, 133, 133 )
+5/tile_mode = 0
+5/occluder_offset = Vector2( 0, 0 )
+5/navigation_offset = Vector2( 0, 0 )
+5/shape_offset = Vector2( 0, 0 )
+5/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+5/shape_one_way = false
+5/shape_one_way_margin = 0.0
+5/shapes = [  ]
+5/z_index = 0
+6/name = "terrainAtlas.png 6"
+6/texture = ExtResource( 7 )
+6/tex_offset = Vector2( 0, 0 )
+6/modulate = Color( 1, 1, 1, 1 )
+6/region = Rect2( 280, 140, 133, 133 )
+6/tile_mode = 0
+6/occluder_offset = Vector2( 0, 0 )
+6/navigation_offset = Vector2( 0, 0 )
+6/shape_offset = Vector2( 0, 0 )
+6/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+6/shape_one_way = false
+6/shape_one_way_margin = 0.0
+6/shapes = [  ]
+6/z_index = 0
+7/name = "terrainAtlas.png 7"
+7/texture = ExtResource( 7 )
+7/tex_offset = Vector2( 0, 0 )
+7/modulate = Color( 1, 1, 1, 1 )
+7/region = Rect2( 420, 0, 133, 133 )
+7/tile_mode = 0
+7/occluder_offset = Vector2( 0, 0 )
+7/navigation_offset = Vector2( 0, 0 )
+7/shape_offset = Vector2( 0, 0 )
+7/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+7/shape_one_way = false
+7/shape_one_way_margin = 0.0
+7/shapes = [  ]
+7/z_index = 0
+8/name = "terrainAtlas.png 8"
+8/texture = ExtResource( 7 )
+8/tex_offset = Vector2( 0, 0 )
+8/modulate = Color( 1, 1, 1, 1 )
+8/region = Rect2( 140, 280, 133, 133 )
+8/tile_mode = 0
+8/occluder_offset = Vector2( 0, 0 )
+8/navigation_offset = Vector2( 0, 0 )
+8/shape_offset = Vector2( 0, 0 )
+8/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+8/shape_one_way = false
+8/shape_one_way_margin = 0.0
+8/shapes = [  ]
+8/z_index = 0
+9/name = "terrainAtlas.png 9"
+9/texture = ExtResource( 7 )
+9/tex_offset = Vector2( 0, 0 )
+9/modulate = Color( 1, 1, 1, 1 )
+9/region = Rect2( 280, 280, 133, 133 )
+9/tile_mode = 0
+9/occluder_offset = Vector2( 0, 0 )
+9/navigation_offset = Vector2( 0, 0 )
+9/shape_offset = Vector2( 0, 0 )
+9/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+9/shape_one_way = false
+9/shape_one_way_margin = 0.0
+9/shapes = [  ]
+9/z_index = 0
+10/name = "terrainAtlas.png 10"
+10/texture = ExtResource( 7 )
+10/tex_offset = Vector2( 0, 0 )
+10/modulate = Color( 1, 1, 1, 1 )
+10/region = Rect2( 0, 0, 133, 133 )
+10/tile_mode = 0
+10/occluder_offset = Vector2( 0, 0 )
+10/navigation_offset = Vector2( 0, 0 )
+10/shape_offset = Vector2( 0, 0 )
+10/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+10/shape = SubResource( 2 )
+10/shape_one_way = false
+10/shape_one_way_margin = 1.0
+10/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 2 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+} ]
+10/z_index = 0
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "Speed4",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
+"loop": true,
+"name": "Speed3",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "Speed2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "Speed1",
+"speed": 5.0
+} ]
+
+[sub_resource type="StreamTexture" id=5]
+flags = 4
+load_path = "res://.import/spacecraft.png-40e0fe6f12aada380451d783c022ddd1.stex"
+
+[sub_resource type="CapsuleShape2D" id=6]
+radius = 23.0284
+height = 13.5751
+
+[node name="Lvl3" type="Node"]
+
+[node name="Finish" type="Area2D" parent="."]
+position = Vector2( 664.878, 531 )
+collision_layer = 0
+script = ExtResource( 12 )
+ship = ExtResource( 14 )
+lvl = ExtResource( 17 )
+
+[node name="pad" type="CollisionShape2D" parent="Finish"]
+position = Vector2( 0, 26.8 )
+shape = SubResource( 1 )
+
+[node name="Map" type="TileMap" parent="."]
+scale = Vector2( 0.5, 0.5 )
+tile_set = SubResource( 3 )
+cell_size = Vector2( 133, 133 )
+cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
+cell_tile_origin = 1
+format = 1
+tile_data = PoolIntArray( 393220, 9, 0, 393221, 7, 0, 393230, 9, 0, 393231, 4, 0, 458752, 6, 0, 458753, 7, 0, 458754, 9, 0, 458755, 4, 0, 458756, 8, 0, 458757, 1, 0, 458758, 6, 0, 458759, 7, 0, 458764, 9, 0, 458765, 4, 0, 458766, 8, 0, 458767, 3, 0, 524288, 3, 0, 524289, 1, 0, 524290, 8, 0, 524291, 3, 0, 524292, 3, 0, 524293, 3, 0, 524294, 3, 0, 524295, 1, 0, 524296, 0, 0, 524297, 0, 0, 524298, 0, 0, 524299, 0, 0, 524300, 8, 0, 524301, 3, 0, 524302, 3, 0, 524303, 3, 0 )
+
+[node name="Ground" type="Area2D" parent="Map"]
+collision_layer = 0
+script = ExtResource( 13 )
+ship = ExtResource( 14 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Map/Ground"]
+polygon = PoolVector2Array( 1.12253, 930.617, 263.52, 1062.76, 663.555, 859.751, 1055.81, 1053.28, 1060.66, 1173.53, 1602.25, 1174.66, 1603.38, 1053.28, 2049.22, 833.824, 2042.14, 1208.81, -0.189209, 1206.29 )
+
+[node name="Spacecraft" type="Node2D" parent="."]
+position = Vector2( 660, 170 )
+script = ExtResource( 2 )
+ship = ExtResource( 14 )
+lvl = ExtResource( 17 )
+
+[node name="UserScript" type="Node" parent="Spacecraft"]
+script = ExtResource( 16 )
+
+[node name="crash" type="Sprite" parent="Spacecraft"]
+visible = false
+position = Vector2( -0.302002, -39.0936 )
+scale = Vector2( 0.24552, 0.292849 )
+texture = ExtResource( 15 )
+
+[node name="fire" type="AnimatedSprite" parent="Spacecraft"]
+position = Vector2( 0.20456, 55.6702 )
+scale = Vector2( 0.2, 0.2 )
+frames = SubResource( 4 )
+animation = "Speed4"
+
+[node name="body" type="Sprite" parent="Spacecraft"]
+position = Vector2( -5.80594, -74.5843 )
+rotation = -1.5708
+scale = Vector2( 0.5, 0.5 )
+texture = SubResource( 5 )
+
+[node name="Collider" type="Area2D" parent="Spacecraft"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spacecraft/Collider"]
+visible = false
+position = Vector2( -0.0627441, -22.2497 )
+rotation = 1.5708
+shape = SubResource( 6 )
+
+[node name="SpacecraftController" type="Node" parent="."]
+script = ExtResource( 8 )
+ship = ExtResource( 14 )
+lvl = ExtResource( 17 )
+
+[node name="UI" type="Node" parent="."]
+script = ExtResource( 18 )
+ship = ExtResource( 14 )
+
+[node name="Fuel" type="RichTextLabel" parent="UI"]
+margin_left = 70.0
+margin_top = 60.0
+margin_right = 202.0
+margin_bottom = 100.0
+text = "FUEL                  400"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VSpeed" type="RichTextLabel" parent="UI"]
+margin_left = 70.0
+margin_top = 100.0
+margin_right = 224.0
+margin_bottom = 140.0
+text = "VERTICAL SPEED  40"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VDistance" type="RichTextLabel" parent="UI"]
+margin_left = 70.0
+margin_top = 140.0
+margin_right = 224.0
+margin_bottom = 180.0
+text = "DISTANCE        1200"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="area_shape_entered" from="Finish" to="Finish" method="_on_Finish_area_shape_entered"]

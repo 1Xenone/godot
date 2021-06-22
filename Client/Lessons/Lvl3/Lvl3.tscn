@@ -1,9 +1,0 @@
-[gd_scene format=2]
-
-[node name="RichTextLabel" type="RichTextLabel"]
-margin_right = 140.0
-margin_bottom = 91.0
-text = "Lvl 3"
-__meta__ = {
-"_edit_use_anchors_": false
-}

@@ -38,6 +38,7 @@
 #include "scene/resources/packed_scene.h"
 #include "scene/scene_string_names.h"
 #include "viewport.h"
+#include "editor/editor_node.h"
 
 #ifdef TOOLS_ENABLED
 #include "editor/editor_settings.h"
@@ -820,6 +821,16 @@ void Node::error(int error_code)
 			ERR_PRINT(vformat("path: %s: %s", get_path(), error_names[error_code]));
 		}
 	}
+}
+
+void Node::run_scene()
+{
+	EditorNode::get_singleton()->run_play();
+}
+
+void Node::run_current_scene()
+{
+	EditorNode::get_singleton()->run_play_current();
 }
 
 bool Node::is_processing() const {
@@ -2843,6 +2854,8 @@ void Node::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_process_delta_time"), &Node::get_process_delta_time);
 	ClassDB::bind_method(D_METHOD("set_process", "enable"), &Node::set_process);
 	ClassDB::bind_method(D_METHOD("err", "error_code"), &Node::error);
+	ClassDB::bind_method(D_METHOD("run_scene"), &Node::run_scene);
+	ClassDB::bind_method(D_METHOD("run_current_scene"), &Node::run_current_scene);
 	ClassDB::bind_method(D_METHOD("set_process_priority", "priority"), &Node::set_process_priority);
 	ClassDB::bind_method(D_METHOD("get_process_priority"), &Node::get_process_priority);
 	ClassDB::bind_method(D_METHOD("is_processing"), &Node::is_processing);

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://Lessons/MarsLanding/Scripts/SO/SOShip.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+vSpeed = 10.0
+vDistance = 0.0
+Fuel = 80.0
+thrust = 0.0
+state = 0

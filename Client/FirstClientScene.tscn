@@ -3,25 +3,11 @@
 [ext_resource path="res://GetLessonID.gd" type="Script" id=1]
 [ext_resource path="res://DownloadLesson.gd" type="Script" id=2]
 [ext_resource path="res://OpenLesson.gd" type="Script" id=3]
-[ext_resource path="res://Server.gd" type="Script" id=4]
+[ext_resource path="res://SendLesson.gd" type="Script" id=4]
 [ext_resource path="res://TestSharp.cs" type="Script" id=5]
 [ext_resource path="res://ToolsButton.gd" type="Script" id=6]
 
 [node name="FirstClientScene" type="Node"]
-
-[node name="Server" type="Node" parent="."]
-script = ExtResource( 4 )
-
-[node name="DownloadLesson" type="Node" parent="."]
-
-[node name="GetLessonID" type="Node" parent="DownloadLesson"]
-script = ExtResource( 1 )
-
-[node name="OpenLesson" type="Node" parent="DownloadLesson"]
-script = ExtResource( 3 )
-
-[node name="DownloadLesson" type="Node" parent="DownloadLesson"]
-script = ExtResource( 2 )
 
 [node name="ToolsButton" type="Button" parent="."]
 margin_top = 1.0
@@ -38,11 +24,29 @@ __meta__ = {
 [node name="TestSharp" type="Node" parent="."]
 script = ExtResource( 5 )
 
-[connection signal="open_lesson" from="DownloadLesson/GetLessonID" to="DownloadLesson/OpenLesson" method="_on_GetLessonID_open_lesson"]
-[connection signal="download_lesson" from="DownloadLesson/OpenLesson" to="DownloadLesson/DownloadLesson" method="_on_OpenLesson_download_lesson"]
-[connection signal="lesson_downloaded" from="DownloadLesson/DownloadLesson" to="DownloadLesson/OpenLesson" method="_on_DownloadLesson_lesson_downloaded"]
+[node name="Server" type="Node" parent="."]
+
+[node name="SendLesson" type="Node" parent="Server"]
+script = ExtResource( 4 )
+
+[node name="Client" type="Node" parent="."]
+
+[node name="DownloadLesson" type="Node" parent="Client"]
+
+[node name="GetLessonID" type="Node" parent="Client/DownloadLesson"]
+script = ExtResource( 1 )
+
+[node name="OpenLesson" type="Node" parent="Client/DownloadLesson"]
+script = ExtResource( 3 )
+
+[node name="DownloadLesson" type="Node" parent="Client/DownloadLesson"]
+script = ExtResource( 2 )
+
 [connection signal="pressed" from="ToolsButton" to="ToolsButton" method="_on_ToolsButton_pressed"]
-[connection signal="restart_tools" from="ToolsButton" to="DownloadLesson/DownloadLesson" method="_on_ToolsButton_restart_tools"]
-[connection signal="restart_tools" from="ToolsButton" to="DownloadLesson/OpenLesson" method="_on_ToolsButton_restart_tools"]
-[connection signal="restart_tools" from="ToolsButton" to="Server" method="_on_ToolsButton_restart_tools"]
-[connection signal="restart_tools" from="ToolsButton" to="DownloadLesson/GetLessonID" method="_on_ToolsButton_restart_tools"]
+[connection signal="restart_tools" from="ToolsButton" to="Client/DownloadLesson/DownloadLesson" method="_on_ToolsButton_restart_tools"]
+[connection signal="restart_tools" from="ToolsButton" to="Server/SendLesson" method="_on_ToolsButton_restart_tools"]
+[connection signal="restart_tools" from="ToolsButton" to="Client/DownloadLesson/GetLessonID" method="_on_ToolsButton_restart_tools"]
+[connection signal="restart_tools" from="ToolsButton" to="Client/DownloadLesson/OpenLesson" method="_on_ToolsButton_restart_tools"]
+[connection signal="open_lesson" from="Client/DownloadLesson/GetLessonID" to="Client/DownloadLesson/OpenLesson" method="_on_GetLessonID_open_lesson"]
+[connection signal="download_lesson" from="Client/DownloadLesson/OpenLesson" to="Client/DownloadLesson/DownloadLesson" method="_on_OpenLesson_download_lesson"]
+[connection signal="lesson_downloaded" from="Client/DownloadLesson/DownloadLesson" to="Client/DownloadLesson/OpenLesson" method="_on_DownloadLesson_lesson_downloaded"]

@@ -1,0 +1,17 @@
+[remap]
+
+importer="texture_atlas"
+type="Texture"
+path="res://.import/terrain_1.png-83054330b1fc7dfe79c83b3e16ddef09.res"
+group_file="res://Lessons/Lvl3/Terrain/Terrain.png"
+valid=true
+[deps]
+
+
+source_file="res://Lessons/MarsLanding/Graphics/Terrain/terrain_1.png"
+dest_files=[ "res://.import/terrain_1.png-83054330b1fc7dfe79c83b3e16ddef09.res" ]
+
+[params]
+
+atlas_file="res://Lessons/Lvl3/Terrain/Terrain.png"
+import_mode=0

@@ -8,8 +8,44 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Reference",
+"class": "GameStates",
+"language": "GDScript",
+"path": "res://addons/my_custom_dock/TestCases/Model/GameStates.gd"
+}, {
+"base": "Resource",
+"class": "Level",
+"language": "GDScript",
+"path": "res://Lessons/MarsLanding/Scripts/SO/SOLevel.gd"
+}, {
+"base": "Resource",
+"class": "SOTestCase",
+"language": "GDScript",
+"path": "res://addons/my_custom_dock/TestCases/SOTestCase.gd"
+}, {
+"base": "Resource",
+"class": "Ship",
+"language": "GDScript",
+"path": "res://Lessons/MarsLanding/Scripts/SO/SOShip.gd"
+}, {
+"base": "Reference",
+"class": "ShipPhysics",
+"language": "GDScript",
+"path": "res://addons/my_custom_dock/TestCases/Model/ShipPhysics.gd"
+}, {
+"base": "Reference",
+"class": "TestStartup",
+"language": "GDScript",
+"path": "res://addons/my_custom_dock/TestCases/Model/TestStartup.gd"
+} ]
 _global_script_class_icons={
+"GameStates": "",
+"Level": "",
+"SOTestCase": "",
+"Ship": "",
+"ShipPhysics": "",
+"TestStartup": ""
 }
 
 [application]
@@ -21,3 +57,7 @@ config/icon="res://icon.png"
 [autoload]
 
 GV="*res://GlobalVariables.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/my_custom_dock/plugin.cfg", "res://addons/tests/plugin.cfg" )
