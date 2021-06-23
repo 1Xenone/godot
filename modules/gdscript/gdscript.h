@@ -348,6 +348,7 @@ class GDScriptLanguage : public ScriptLanguage {
 	CallLevel *_call_stack;
 
 	void _add_global(const StringName &p_name, const Variant &p_value);
+	void _remove_global(const StringName &p_name);
 
 	friend class GDScriptInstance;
 
@@ -476,6 +477,7 @@ public:
 	virtual String _get_indentation() const;
 	virtual void auto_indent_code(String &p_code, int p_from_line, int p_to_line) const;
 	virtual void add_global_constant(const StringName &p_variable, const Variant &p_value);
+	virtual void remove_global_constant(const StringName &p_variable);
 	virtual void add_named_global_constant(const StringName &p_name, const Variant &p_value);
 	virtual void remove_named_global_constant(const StringName &p_name);
 
