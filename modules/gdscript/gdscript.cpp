@@ -1409,9 +1409,25 @@ void GDScriptLanguage::_add_global(const StringName &p_name, const Variant &p_va
 	_global_array = global_array.ptrw();
 }
 
+void GDScriptLanguage::_remove_global(const StringName &p_name) {
+
+	// TODO: Fix indexes!
+	if (globals.has(p_name)) {
+		int index = globals[p_name];
+		global_array.remove(index);
+		globals.erase(p_name);
+		for (int i = index; i < globals.size(); i++) {
+		}
+	}
+}
+
 void GDScriptLanguage::add_global_constant(const StringName &p_variable, const Variant &p_value) {
 
 	_add_global(p_variable, p_value);
+}
+
+void GDScriptLanguage::remove_global_constant(const StringName &p_variable) {
+	_remove_global(p_variable);
 }
 
 void GDScriptLanguage::add_named_global_constant(const StringName &p_name, const Variant &p_value) {
@@ -1584,10 +1600,10 @@ struct GDScriptDepSort {
 		return false; //not a base
 	}
 };
-
+#define SceneInEditor
 void GDScriptLanguage::reload_all_scripts() {
 
-#ifdef DEBUG_ENABLED
+#ifdef SceneInEditor
 	print_verbose("GDScript: Reloading all scripts");
 	lock.lock();
 
@@ -1619,7 +1635,7 @@ void GDScriptLanguage::reload_all_scripts() {
 
 void GDScriptLanguage::reload_tool_script(const Ref<Script> &p_script, bool p_soft_reload) {
 
-#ifdef DEBUG_ENABLED
+#ifdef SceneInEditor
 
 	lock.lock();
 
