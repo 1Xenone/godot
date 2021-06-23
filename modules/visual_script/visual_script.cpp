@@ -2492,8 +2492,6 @@ void VisualScriptLanguage::auto_indent_code(String &p_code, int p_from_line, int
 }
 void VisualScriptLanguage::add_global_constant(const StringName &p_variable, const Variant &p_value) {
 }
-void VisualScriptLanguage::remove_global_constant(const StringName &p_variable) {
-}
 
 /* DEBUGGER FUNCTIONS */
 

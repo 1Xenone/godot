@@ -121,7 +121,6 @@
 #include "editor/plugins/cpu_particles_2d_editor_plugin.h"
 #include "editor/plugins/cpu_particles_editor_plugin.h"
 #include "editor/plugins/curve_editor_plugin.h"
-#include "editor/plugins/editor_playback_plugin.h"
 #include "editor/plugins/editor_preview_plugins.h"
 #include "editor/plugins/gi_probe_editor_plugin.h"
 #include "editor/plugins/gradient_editor_plugin.h"
@@ -454,8 +453,7 @@ void EditorNode::_notification(int p_what) {
 
 			editor_selection->update();
 
-			if (use_fixed_window_size_override == true)
-				scene_root->set_size_override(true, Size2(ProjectSettings::get_singleton()->get("display/window/size/width"), ProjectSettings::get_singleton()->get("display/window/size/height")));
+			scene_root->set_size_override(true, Size2(ProjectSettings::get_singleton()->get("display/window/size/width"), ProjectSettings::get_singleton()->get("display/window/size/height")));
 
 			ResourceImporterTexture::get_singleton()->update_imports();
 		} break;
@@ -1643,11 +1641,7 @@ void EditorNode::_dialog_action(String p_file) {
 			if (pick_main_scene->has_meta("from_native") && (bool)pick_main_scene->get_meta("from_native")) {
 				run_native->resume_run_native();
 			} else {
-				if (run_native->is_run_in_editor_enabled()) {
-					_editor_playback_run(false, ""); // automatically run the project
-				} else {
-					_run(false, ""); // automatically run the project
-				}
+				_run(false, ""); // automatically run the project
 			}
 		} break;
 		case FILE_CLOSE:
@@ -2155,239 +2149,6 @@ void EditorNode::_edit_current() {
 	inspector_dock->update_keying();
 }
 
-void EditorNode::_editor_playback_destroy_autoloads() {
-	for (int i = 0; i < editor_singletons.size(); i++) {
-		editor_singletons[i];
-	}
-
-	editor_singletons.clear();
-}
-
-void EditorNode::_editor_playback_init_autoloads(Node *p_root) {
-	//autoload
-	List<PropertyInfo> props;
-	ProjectSettings::get_singleton()->get_property_list(&props);
-
-	//first pass, add the constants so they exist before any script is loaded
-	for (List<PropertyInfo>::Element *E = props.front(); E; E = E->next()) {
-
-		String s = E->get().name;
-		if (!s.begins_with("autoload/"))
-			continue;
-		String name = s.get_slicec('/', 1);
-		String path = ProjectSettings::get_singleton()->get(s);
-		bool global_var = false;
-		if (path.begins_with("*")) {
-			global_var = true;
-		}
-
-		if (global_var) {
-			for (int i = 0; i < ScriptServer::get_language_count(); i++) {
-				editor_singletons.push_back(name);
-				ScriptServer::get_language(i)->add_global_constant(name, Variant());
-			}
-		}
-	}
-
-	//second pass, load into global constants
-	List<Node *> to_add;
-	for (List<PropertyInfo>::Element *E = props.front(); E; E = E->next()) {
-
-		String s = E->get().name;
-		if (!s.begins_with("autoload/"))
-			continue;
-		String name = s.get_slicec('/', 1);
-		String path = ProjectSettings::get_singleton()->get(s);
-		bool global_var = false;
-		if (path.begins_with("*")) {
-			global_var = true;
-			path = path.substr(1, path.length() - 1);
-		}
-
-		RES res = ResourceLoader::load(path);
-		ERR_EXPLAIN("Can't autoload: " + path);
-		ERR_CONTINUE(res.is_null());
-		Node *n = NULL;
-		if (res->is_class("PackedScene")) {
-			Ref<PackedScene> ps = res;
-			n = ps->instance();
-		} else if (res->is_class("Script")) {
-			Ref<Script> s = res;
-			StringName ibt = s->get_instance_base_type();
-			bool valid_type = ClassDB::is_parent_class(ibt, "Node");
-			ERR_EXPLAIN("Script does not inherit a Node: " + path);
-			ERR_CONTINUE(!valid_type);
-
-			Object *obj = ClassDB::instance(ibt);
-
-			ERR_EXPLAIN("Cannot instance script for autoload, expected 'Node' inheritance, got: " + String(ibt));
-			ERR_CONTINUE(obj == NULL);
-
-			n = Object::cast_to<Node>(obj);
-			n->set_script(s.get_ref_ptr());
-		}
-
-		ERR_EXPLAIN("Path in autoload not a node or script: " + path);
-		ERR_CONTINUE(!n);
-		n->set_name(name);
-
-		//defer so references are all valid on _ready()
-		to_add.push_back(n);
-
-		if (global_var) {
-			for (int i = 0; i < ScriptServer::get_language_count(); i++) {
-				ScriptServer::get_language(i)->add_global_constant(name, n);
-			}
-		}
-	}
-
-	for (List<Node *>::Element *E = to_add.front(); E; E = E->next()) {
-
-		p_root->add_child(E->get());
-	}
-}
-
-void EditorNode::_editor_playback_stop(const bool p_reload_scene) {
-	if (is_editor_playback_running()) {
-		if (editor_data.get_edited_scene_root()) {
-
-			Node *scene = editor_data.get_edited_scene_root();
-			String run_filename = scene->get_filename();
-
-			PhysicsServer::get_singleton()->set_active(false);
-			Physics2DServer::get_singleton()->set_active(false);
-			ScriptServer::set_scripting_enabled(false);
-
-			editor_playback_running = false;
-
-			_editor_playback_destroy_autoloads();
-
-			// TODO: why is this limited to debugging?
-			for (int i = 0; i < ScriptServer::get_language_count(); i++) {
-				ScriptServer::get_language(i)->reload_all_scripts();
-			}
-
-			print_line("_editor_playback_run stop...");
-
-			if (p_reload_scene) {
-				reload_scene(run_filename);
-			}
-		}
-	}
-}
-
-void EditorNode::_editor_playback_run(bool p_current, const String &p_custom) {
-	if (!is_editor_playback_running()) {
-
-		String playback_scene_filename;
-
-		if (p_current || (editor_data.get_edited_scene_root() && p_custom == editor_data.get_edited_scene_root()->get_filename())) {
-
-			Node *scene = editor_data.get_edited_scene_root();
-
-			if (!scene) {
-				current_option = -1;
-				accept->get_ok()->set_text(TTR("I see.."));
-				accept->set_text(TTR("There is no defined scene to run."));
-				accept->popup_centered_minsize();
-				return;
-			}
-
-			if (scene->get_filename() == "") {
-				current_option = -1;
-				_menu_option_confirm(FILE_SAVE_BEFORE_RUN, false);
-				return;
-			}
-
-			playback_scene_filename = scene->get_filename();
-		} else if (p_custom != "") {
-			playback_scene_filename = p_custom;
-		} else {
-
-			//evidently, run the scene
-			String main_scene = GLOBAL_DEF("application/run/main_scene", "");
-			if (main_scene == "") {
-
-				current_option = -1;
-				pick_main_scene->set_text(TTR("No main scene has ever been defined, select one?\nYou can change it later in \"Project Settings\" under the 'application' category."));
-				pick_main_scene->popup_centered_minsize();
-				return;
-			}
-
-			if (!FileAccess::exists(main_scene)) {
-
-				current_option = -1;
-				pick_main_scene->set_text(vformat(TTR("Selected scene '%s' does not exist, select a valid one?\nYou can change it later in \"Project Settings\" under the 'application' category."), main_scene));
-				pick_main_scene->popup_centered_minsize();
-				return;
-			}
-
-			if (ResourceLoader::get_resource_type(main_scene) != "PackedScene") {
-
-				current_option = -1;
-				pick_main_scene->set_text(vformat(TTR("Selected scene '%s' is not a scene file, select a valid one?\nYou can change it later in \"Project Settings\" under the 'application' category."), main_scene));
-				pick_main_scene->popup_centered_minsize();
-				return;
-			}
-
-			playback_scene_filename = main_scene;
-		}
-
-		if (bool(EDITOR_DEF("run/auto_save/save_before_running", true))) {
-
-			if (unsaved_cache) {
-
-				Node *scene = editor_data.get_edited_scene_root();
-
-				if (scene) { //only autosave if there is a scene obviously
-
-					if (scene->get_filename() == "") {
-
-						current_option = -1;
-						accept->get_ok()->set_text(TTR("I see.."));
-						accept->set_text(TTR("Current scene was never saved, please save it prior to running."));
-						accept->popup_centered_minsize();
-						return;
-					}
-
-					_save_scene_with_preview(scene->get_filename());
-				}
-			}
-			_menu_option(FILE_SAVE_ALL_SCENES);
-			editor_data.save_editor_external_data();
-		}
-
-		if (!_call_build())
-			return;
-
-		if (bool(EDITOR_DEF("run/output/always_clear_output_on_play", true))) {
-			log->clear();
-		}
-
-		if (bool(EDITOR_DEF("run/output/always_open_output_on_play", true))) {
-			make_bottom_panel_item_visible(log);
-		}
-
-		PhysicsServer::get_singleton()->set_active(true);
-		Physics2DServer::get_singleton()->set_active(true);
-		ScriptServer::set_scripting_enabled(true);
-
-		print_line("_editor_playback_run begin...");
-
-		if (load_scene(playback_scene_filename, false, false, true, false, true) != OK) {
-			PhysicsServer::get_singleton()->set_active(false);
-			Physics2DServer::get_singleton()->set_active(false);
-			ScriptServer::set_scripting_enabled(false);
-
-			for (int i = 0; i < ScriptServer::get_language_count(); i++) {
-				ScriptServer::get_language(i)->reload_all_scripts();
-			}
-		} else {
-			//_editor_select(EDITOR_PLAY);
-		}
-	}
-}
-
 void EditorNode::_run(bool p_current, const String &p_custom) {
 
 	if (editor_run.get_status() == EditorRun::STATUS_PLAY) {
@@ -2601,13 +2362,6 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
 		case SCENE_TAB_CLOSE:
 		case FILE_SAVE_SCENE: {
 
-			if (editor_playback_running) {
-				accept->get_ok()->set_text(TTR("I see.."));
-				accept->set_text(TTR("This operation can't be done during playback mode."));
-				accept->popup_centered_minsize();
-				break;
-			}
-
 			int scene_idx = (p_option == FILE_SAVE_SCENE) ? -1 : tab_closing;
 
 			Node *scene = editor_data.get_edited_scene_root(scene_idx);
@@ -2626,14 +2380,6 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
 			FALLTHROUGH;
 		}
 		case FILE_SAVE_AS_SCENE: {
-
-			if (editor_playback_running) {
-				accept->get_ok()->set_text(TTR("I see.."));
-				accept->set_text(TTR("This operation can't be done during playback mode."));
-				accept->popup_centered_minsize();
-				break;
-			}
-
 			int scene_idx = (p_option == FILE_SAVE_SCENE || p_option == FILE_SAVE_AS_SCENE) ? -1 : tab_closing;
 
 			Node *scene = editor_data.get_edited_scene_root(scene_idx);
@@ -2687,12 +2433,6 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
 		} break;
 
 		case FILE_SAVE_ALL_SCENES: {
-			if (editor_playback_running) {
-				accept->get_ok()->set_text(TTR("I see.."));
-				accept->set_text(TTR("This operation can't be done during playback mode."));
-				accept->popup_centered_minsize();
-				break;
-			}
 
 			_save_all_scenes();
 		} break;
@@ -2839,7 +2579,7 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
 
 		} break;
 		case RUN_PLAY_CUSTOM_SCENE: {
-			if (run_custom_filename.empty() || (editor_run.get_status() == EditorRun::STATUS_STOP && !is_editor_playback_running())) {
+			if (run_custom_filename.empty() || editor_run.get_status() == EditorRun::STATUS_STOP) {
 				_menu_option_confirm(RUN_STOP, true);
 				quick_run->popup_dialog("PackedScene", true);
 				quick_run->set_title(TTR("Quick Run Scene..."));
@@ -2847,22 +2587,15 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
 			} else {
 				String last_custom_scene = run_custom_filename;
 				run_play_custom(last_custom_scene);
-				if (run_native->is_run_in_editor_enabled()) {
-					_editor_playback_run(false, last_custom_scene);
-				} else {
-					_run(false, last_custom_scene);
-				}
 			}
 
 		} break;
 		case RUN_STOP: {
 
-			if (editor_run.get_status() == EditorRun::STATUS_STOP && !is_editor_playback_running())
+			if (editor_run.get_status() == EditorRun::STATUS_STOP)
 				break;
 
 			editor_run.stop();
-			_editor_playback_stop(true);
-
 			run_custom_filename.clear();
 			play_button->set_pressed(false);
 			play_button->set_icon(gui_base->get_icon("MainPlay", "EditorIcons"));
@@ -3001,14 +2734,6 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
 
 			debug_menu->get_popup()->set_item_checked(debug_menu->get_popup()->get_item_index(RUN_FILE_SERVER), !ischecked);
 			EditorSettings::get_singleton()->set_project_metadata("debug_options", "run_file_server", !ischecked);
-		} break;
-		case RUN_IN_EDITOR: {
-
-			bool ischecked = debug_menu->get_popup()->is_item_checked(debug_menu->get_popup()->get_item_index(RUN_IN_EDITOR));
-			debug_menu->get_popup()->set_item_checked(debug_menu->get_popup()->get_item_index(RUN_IN_EDITOR), !ischecked);
-			run_native->set_run_in_editor(!ischecked);
-			EditorSettings::get_singleton()->set_project_metadata("debug_options", "run_in_editor", !ischecked);
-
 		} break;
 		case RUN_LIVE_DEBUG: {
 
@@ -3309,7 +3034,6 @@ void EditorNode::_discard_changes(const String &p_str) {
 
 void EditorNode::_update_debug_options() {
 
-	bool check_run_in_editor = EditorSettings::get_singleton()->get_project_metadata("debug_options", "run_in_editor", false);
 	bool check_deploy_remote = EditorSettings::get_singleton()->get_project_metadata("debug_options", "run_deploy_remote_debug", false);
 	bool check_file_server = EditorSettings::get_singleton()->get_project_metadata("debug_options", "run_file_server", false);
 	bool check_debug_collisons = EditorSettings::get_singleton()->get_project_metadata("debug_options", "run_debug_collisons", false);
@@ -3317,7 +3041,6 @@ void EditorNode::_update_debug_options() {
 	bool check_live_debug = EditorSettings::get_singleton()->get_project_metadata("debug_options", "run_live_debug", true);
 	bool check_reload_scripts = EditorSettings::get_singleton()->get_project_metadata("debug_options", "run_reload_scripts", true);
 
-	if (check_run_in_editor) _menu_option_confirm(RUN_IN_EDITOR, true);
 	if (check_deploy_remote) _menu_option_confirm(RUN_DEPLOY_REMOTE_DEBUG, true);
 	if (check_file_server) _menu_option_confirm(RUN_FILE_SERVER, true);
 	if (check_debug_collisons) _menu_option_confirm(RUN_DEBUG_COLLISONS, true);
@@ -3615,7 +3338,7 @@ void EditorNode::_remove_scene(int index, bool p_change_tab) {
 	}
 }
 
-void EditorNode::set_edited_scene(Node *p_scene, bool p_autoloads) {
+void EditorNode::set_edited_scene(Node *p_scene) {
 
 	if (get_editor_data().get_edited_scene_root()) {
 		if (get_editor_data().get_edited_scene_root()->get_parent() == scene_root)
@@ -3628,15 +3351,6 @@ void EditorNode::set_edited_scene(Node *p_scene, bool p_autoloads) {
 	scene_tree_dock->set_edited_scene(p_scene);
 	if (get_tree())
 		get_tree()->set_edited_scene_root(p_scene);
-
-	if (p_autoloads) {
-		// TODO: why is this limited to debugging?
-		for (int i = 0; i < ScriptServer::get_language_count(); i++) {
-			ScriptServer::get_language(i)->reload_all_scripts();
-		}
-
-		_editor_playback_init_autoloads(scene_root);
-	}
 
 	if (p_scene) {
 		if (p_scene->get_parent() != scene_root)
@@ -3745,8 +3459,6 @@ void EditorNode::set_current_scene(int p_idx) {
 		call_deferred("_clear_undo_history");
 	}
 
-	_editor_playback_stop(false); // CRASH
-
 	changing_scene = true;
 	editor_data.save_edited_scene_state(editor_selection, &editor_history, _get_main_scene_state());
 
@@ -3802,7 +3514,7 @@ int EditorNode::new_scene() {
 	return idx;
 }
 
-Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, bool p_set_inherited, bool p_clear_errors, bool p_force_open_imported, bool p_silent_change_tab, bool p_runtime_scene) {
+Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, bool p_set_inherited, bool p_clear_errors, bool p_force_open_imported, bool p_silent_change_tab) {
 	if (!is_inside_tree()) {
 		defer_load_scene = p_scene;
 		return OK;
@@ -3810,13 +3522,11 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 
 	if (!p_set_inherited) {
 
-		if (!p_runtime_scene) {
-			for (int i = 0; i < editor_data.get_edited_scene_count(); i++) {
+		for (int i = 0; i < editor_data.get_edited_scene_count(); i++) {
 
-				if (editor_data.get_scene_path(i) == p_scene) {
-					_scene_tab_changed(i);
-					return OK;
-				}
+			if (editor_data.get_scene_path(i) == p_scene) {
+				_scene_tab_changed(i);
+				return OK;
 			}
 		}
 
@@ -3910,9 +3620,6 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 		sdata->set_path(lpath, true); //take over path
 	}
 
-	if (p_runtime_scene)
-		editor_playback_running = true;
-
 	Node *new_scene = sdata->instance(PackedScene::GEN_EDIT_STATE_MAIN);
 
 	if (!new_scene) {
@@ -3924,9 +3631,6 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 			set_current_scene(prev);
 			editor_data.remove_scene(idx);
 		}
-		
-		editor_playback_running = false;
-		
 		return ERR_FILE_CORRUPT;
 	}
 
@@ -3939,7 +3643,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 
 	new_scene->set_scene_instance_state(Ref<SceneState>());
 
-	set_edited_scene(new_scene, editor_playback_running);
+	set_edited_scene(new_scene);
 	_get_scene_metadata(p_scene);
 
 	saved_version = editor_data.get_undo_redo().get_version();
@@ -4101,11 +3805,7 @@ void EditorNode::_quick_opened() {
 
 void EditorNode::_quick_run() {
 
-	if (run_native->is_run_in_editor_enabled()) {
-		_editor_playback_run(false, quick_run->get_selected());
-	} else {
-		_run(false, quick_run->get_selected());
-	}
+	_run(false, quick_run->get_selected());
 }
 
 void EditorNode::notify_child_process_exited() {
@@ -5043,21 +4743,13 @@ bool EditorNode::ensure_main_scene(bool p_from_native) {
 
 void EditorNode::run_play() {
 	_menu_option_confirm(RUN_STOP, true);
-	if (run_native->is_run_in_editor_enabled()) {
-		_editor_playback_run(false);
-	} else {
-		_run(false);
-	}
+	_run(false);
 }
 
 void EditorNode::run_play_current() {
 	_save_default_environment();
 	_menu_option_confirm(RUN_STOP, true);
-	if (run_native->is_run_in_editor_enabled()) {
-		_editor_playback_run(true);
-	} else {
-		_run(true);
-	}
+	_run(true);
 }
 
 void EditorNode::run_play_custom(const String &p_custom) {
@@ -6111,13 +5803,6 @@ int EditorNode::execute_and_show_output(const String &p_title, const String &p_p
 	return eta.exitcode;
 }
 
-void EditorNode::set_use_fixed_window_size_override(bool p_override) {
-	use_fixed_window_size_override = p_override;
-	if (use_fixed_window_size_override) {
-		scene_root->set_size_override(true, Size2(ProjectSettings::get_singleton()->get("display/window/size/width"), ProjectSettings::get_singleton()->get("display/window/size/height")));
-	}
-}
-
 EditorNode::EditorNode() {
 
 	Input::get_singleton()->set_use_accumulated_input(true);
@@ -6147,8 +5832,6 @@ EditorNode::EditorNode() {
 	}
 
 	singleton = this;
-	use_fixed_window_size_override = true;
-	editor_playback_running = false;
 	exiting = false;
 	dimmed = false;
 	last_checked_version = 0;
@@ -6766,8 +6449,6 @@ EditorNode::EditorNode() {
 	p = debug_menu->get_popup();
 	p->set_hide_on_window_lose_focus(true);
 	p->set_hide_on_checkable_item_selection(false);
-	p->add_check_item(TTR("Run In-Editor (EXPERIMENTAL!)"), RUN_IN_EDITOR);
-	p->set_item_tooltip(p->get_item_count() - 1, TTR("When running the project, it will be run from within the editor rather than as a seperate application instance."));
 	p->add_check_shortcut(ED_SHORTCUT("editor/deploy_with_remote_debug", TTR("Deploy with Remote Debug")), RUN_DEPLOY_REMOTE_DEBUG);
 	p->set_item_tooltip(
 			p->get_item_count() - 1,
@@ -7224,8 +6905,6 @@ EditorNode::EditorNode() {
 	} else {
 		WARN_PRINT("Asset Library not available, as it requires SSL to work.");
 	}
-
-	add_editor_plugin(memnew(EditorPlaybackPlugin(this)));
 
 	//add interface before adding plugins
 
