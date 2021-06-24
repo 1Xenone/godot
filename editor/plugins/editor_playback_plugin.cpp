@@ -29,20 +29,20 @@
 /*************************************************************************/
 #include "editor_playback_plugin.h"
 
-#include "camera_matrix.h"
+#include "core/math/camera_matrix.h"
 #include "core/os/input.h"
-#include "editor/animation_editor.h"
+//#include "editor/animation_editor.h"
 #include "editor/editor_node.h"
 #include "editor/editor_settings.h"
 #include "editor/plugins/script_editor_plugin.h"
 #include "editor/script_editor_debugger.h"
-#include "os/keyboard.h"
-#include "print_string.h"
-#include "project_settings.h"
+#include "core/os/keyboard.h"
+#include "core/print_string.h"
+#include "core/project_settings.h"
 #include "scene/3d/camera.h"
 #include "scene/3d/visual_instance.h"
 #include "scene/resources/packed_scene.h"
-#include "sort.h"
+#include "scene/2d/y_sort.h"
 
 static int _get_key_modifier_setting(const String &p_property) {
 

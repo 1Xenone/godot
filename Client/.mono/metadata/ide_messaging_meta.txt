@@ -1,0 +1,2 @@
+﻿43405
+/home/artem/Desktop/godot/godot/bin/godot.x11.tools.64.mono

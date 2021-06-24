@@ -43,10 +43,10 @@ script = ExtResource( 3 )
 script = ExtResource( 2 )
 
 [connection signal="pressed" from="ToolsButton" to="ToolsButton" method="_on_ToolsButton_pressed"]
-[connection signal="restart_tools" from="ToolsButton" to="Client/DownloadLesson/DownloadLesson" method="_on_ToolsButton_restart_tools"]
-[connection signal="restart_tools" from="ToolsButton" to="Server/SendLesson" method="_on_ToolsButton_restart_tools"]
 [connection signal="restart_tools" from="ToolsButton" to="Client/DownloadLesson/GetLessonID" method="_on_ToolsButton_restart_tools"]
 [connection signal="restart_tools" from="ToolsButton" to="Client/DownloadLesson/OpenLesson" method="_on_ToolsButton_restart_tools"]
+[connection signal="restart_tools" from="ToolsButton" to="Server/SendLesson" method="_on_ToolsButton_restart_tools"]
+[connection signal="restart_tools" from="ToolsButton" to="Client/DownloadLesson/DownloadLesson" method="_on_ToolsButton_restart_tools"]
 [connection signal="open_lesson" from="Client/DownloadLesson/GetLessonID" to="Client/DownloadLesson/OpenLesson" method="_on_GetLessonID_open_lesson"]
 [connection signal="download_lesson" from="Client/DownloadLesson/OpenLesson" to="Client/DownloadLesson/DownloadLesson" method="_on_OpenLesson_download_lesson"]
 [connection signal="lesson_downloaded" from="Client/DownloadLesson/DownloadLesson" to="Client/DownloadLesson/OpenLesson" method="_on_DownloadLesson_lesson_downloaded"]

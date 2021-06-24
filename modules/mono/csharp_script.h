@@ -418,6 +418,7 @@ public:
 	virtual String _get_indentation() const;
 	/* TODO? */ virtual void auto_indent_code(String &p_code, int p_from_line, int p_to_line) const {}
 	/* TODO */ virtual void add_global_constant(const StringName &p_variable, const Variant &p_value) {}
+	/* TODO */ virtual void remove_global_constant(const StringName &p_variable) {};
 
 	/* DEBUGGER FUNCTIONS */
 	virtual String debug_get_error() const;

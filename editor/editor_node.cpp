@@ -2193,11 +2193,11 @@ void EditorNode::_editor_playback_init_autoloads(Node *p_root) {
 	List<Node *> to_add;
 	for (List<PropertyInfo>::Element *E = props.front(); E; E = E->next()) {
 
-		String s = E->get().name;
-		if (!s.begins_with("autoload/"))
+		String string = E->get().name;
+		if (!string.begins_with("autoload/"))
 			continue;
-		String name = s.get_slicec('/', 1);
-		String path = ProjectSettings::get_singleton()->get(s);
+		String name = string.get_slicec('/', 1);
+		String path = ProjectSettings::get_singleton()->get(string);
 		bool global_var = false;
 		if (path.begins_with("*")) {
 			global_var = true;
@@ -2205,29 +2205,29 @@ void EditorNode::_editor_playback_init_autoloads(Node *p_root) {
 		}
 
 		RES res = ResourceLoader::load(path);
-		ERR_EXPLAIN("Can't autoload: " + path);
+		ERR_PRINT("Can't autoload: " + path);
 		ERR_CONTINUE(res.is_null());
 		Node *n = NULL;
 		if (res->is_class("PackedScene")) {
 			Ref<PackedScene> ps = res;
 			n = ps->instance();
 		} else if (res->is_class("Script")) {
-			Ref<Script> s = res;
-			StringName ibt = s->get_instance_base_type();
+			Ref<Script> script = res;
+			StringName ibt = script->get_instance_base_type();
 			bool valid_type = ClassDB::is_parent_class(ibt, "Node");
-			ERR_EXPLAIN("Script does not inherit a Node: " + path);
+			ERR_PRINT("Script does not inherit a Node: " + path);
 			ERR_CONTINUE(!valid_type);
 
 			Object *obj = ClassDB::instance(ibt);
 
-			ERR_EXPLAIN("Cannot instance script for autoload, expected 'Node' inheritance, got: " + String(ibt));
+			ERR_PRINT("Cannot instance script for autoload, expected 'Node' inheritance, got: " + String(ibt));
 			ERR_CONTINUE(obj == NULL);
 
 			n = Object::cast_to<Node>(obj);
-			n->set_script(s.get_ref_ptr());
+			n->set_script(script.get_ref_ptr());
 		}
 
-		ERR_EXPLAIN("Path in autoload not a node or script: " + path);
+		ERR_PRINT("Path in autoload not a node or script: " + path);
 		ERR_CONTINUE(!n);
 		n->set_name(name);
 
@@ -2272,6 +2272,12 @@ void EditorNode::_editor_playback_stop(const bool p_reload_scene) {
 			if (p_reload_scene) {
 				reload_scene(run_filename);
 			}
+
+			Node *curScene = editor_data.get_edited_scene_root();
+
+			if (curScene && curScene->get_filename() != "") { // Only autosave if there is a scene and if it has a path.
+				_save_scene_with_preview(curScene->get_filename());
+			}
 		}
 	}
 }
@@ -2295,7 +2301,7 @@ void EditorNode::_editor_playback_run(bool p_current, const String &p_custom) {
 
 			if (scene->get_filename() == "") {
 				current_option = -1;
-				_menu_option_confirm(FILE_SAVE_BEFORE_RUN, false);
+				_menu_option_confirm(FILE_SAVE_AND_RUN, false);
 				return;
 			}
 
@@ -2357,7 +2363,7 @@ void EditorNode::_editor_playback_run(bool p_current, const String &p_custom) {
 			editor_data.save_editor_external_data();
 		}
 
-		if (!_call_build())
+		if (!call_build())
 			return;
 
 		if (bool(EDITOR_DEF("run/output/always_clear_output_on_play", true))) {
@@ -2374,7 +2380,15 @@ void EditorNode::_editor_playback_run(bool p_current, const String &p_custom) {
 
 		print_line("_editor_playback_run begin...");
 
-		if (load_scene(playback_scene_filename, false, false, true, false, true) != OK) {
+		int scene_idx = -1;
+		for (int i = 0; i < editor_data.get_edited_scene_count(); i++) {
+			if (editor_data.get_scene_path(i) == playback_scene_filename) {
+				scene_idx = i;
+				break;
+			}
+		}
+
+		if (load_scene(playback_scene_filename, false, false, true, false, false, true) != OK) {
 			PhysicsServer::get_singleton()->set_active(false);
 			Physics2DServer::get_singleton()->set_active(false);
 			ScriptServer::set_scripting_enabled(false);
@@ -2383,8 +2397,16 @@ void EditorNode::_editor_playback_run(bool p_current, const String &p_custom) {
 				ScriptServer::get_language(i)->reload_all_scripts();
 			}
 		} else {
+
+			bool hasAlreadyThisScene = scene_idx != -1;
+			if(hasAlreadyThisScene){
+				_remove_scene(scene_idx, false);
+			}
 			//_editor_select(EDITOR_PLAY);
 		}
+	}
+	else{
+		_editor_playback_stop(true);
 	}
 }
 
@@ -5042,20 +5064,31 @@ bool EditorNode::ensure_main_scene(bool p_from_native) {
 }
 
 void EditorNode::run_play() {
-	_menu_option_confirm(RUN_STOP, true);
 	if (run_native->is_run_in_editor_enabled()) {
-		_editor_playback_run(false);
+		if(is_editor_playback_running()){
+			_menu_option_confirm(RUN_STOP, true);
+		}
+		else{
+			_editor_playback_run(false);
+		}
 	} else {
+		_menu_option_confirm(RUN_STOP, true);
 		_run(false);
 	}
 }
 
 void EditorNode::run_play_current() {
 	_save_default_environment();
-	_menu_option_confirm(RUN_STOP, true);
+	
 	if (run_native->is_run_in_editor_enabled()) {
-		_editor_playback_run(true);
+		if(is_editor_playback_running()){
+			_menu_option_confirm(RUN_STOP, true);
+		}
+		else{
+			_editor_playback_run(true);
+		}
 	} else {
+		_menu_option_confirm(RUN_STOP, true);
 		_run(true);
 	}
 }

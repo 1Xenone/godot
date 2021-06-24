@@ -190,11 +190,6 @@ points = PoolVector2Array( 133, 133, 0, 133, 0, 0, 133, 0 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
-"frames": [ ExtResource( 3 ), ExtResource( 11 ) ],
-"loop": true,
-"name": "Speed4",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
 "loop": true,
 "name": "Speed3",
@@ -208,6 +203,11 @@ animations = [ {
 "frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "Speed1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "Speed4",
 "speed": 5.0
 } ]
 
@@ -322,5 +322,7 @@ text = "DISTANCE        1200"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Node" type="Node" parent="."]
 
 [connection signal="area_shape_entered" from="Finish" to="Finish" method="_on_Finish_area_shape_entered"]

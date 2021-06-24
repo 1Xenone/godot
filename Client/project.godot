@@ -51,7 +51,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Client"
-run/main_scene="res://FirstClientScene.tscn"
+run/main_scene="res://Test.tscn"
 config/icon="res://icon.png"
 
 [autoload]
