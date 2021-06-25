@@ -142,6 +142,7 @@ opts.Add(
         False,
     )
 )
+opts.Add(BoolVariable("client", "Enable client vesion of app", False))
 opts.Add(BoolVariable("disable_3d", "Disable 3D nodes for a smaller executable", False))
 opts.Add(BoolVariable("disable_advanced_gui", "Disable advanced GUI nodes and behaviors", False))
 opts.Add(BoolVariable("no_editor_splash", "Don't use the custom splash screen for the editor", False))
@@ -561,6 +562,8 @@ if selected_platform in platform_list:
         env.Append(CPPDEFINES=["PTRCALL_ENABLED"])
     if env["tools"]:
         env.Append(CPPDEFINES=["TOOLS_ENABLED"])
+    if env["client"]:
+        env.Append(CPPDEFINES=["CLIENT_VERSION"])
     if env["disable_3d"]:
         if env["tools"]:
             print(

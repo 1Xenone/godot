@@ -393,12 +393,11 @@ void EditorNode::_unhandled_input(const Ref<InputEvent> &p_event) {
 			filesystem_dock->focus_on_filter();
 		}
 
+#ifndef CLIENT_VERSION
 		if (ED_IS_SHORTCUT("editor/editor_2d", p_event)) {
 			_editor_select(EDITOR_2D);
 		} else if (ED_IS_SHORTCUT("editor/editor_3d", p_event)) {
 			_editor_select(EDITOR_3D);
-		} else if (ED_IS_SHORTCUT("editor/editor_script", p_event)) {
-			_editor_select(EDITOR_SCRIPT);
 		} else if (ED_IS_SHORTCUT("editor/editor_help", p_event)) {
 			emit_signal("request_help_search", "");
 		} else if (ED_IS_SHORTCUT("editor/editor_assetlib", p_event) && StreamPeerSSL::is_available()) {
@@ -407,6 +406,10 @@ void EditorNode::_unhandled_input(const Ref<InputEvent> &p_event) {
 			_editor_select_next();
 		} else if (ED_IS_SHORTCUT("editor/editor_prev", p_event)) {
 			_editor_select_prev();
+		} else 
+#endif
+		if (ED_IS_SHORTCUT("editor/editor_script", p_event)) {
+			_editor_select(EDITOR_SCRIPT);
 		}
 
 		if (old_editor != editor_plugin_screen) {
@@ -503,11 +506,16 @@ void EditorNode::_notification(int p_what) {
 
 			feature_profile_manager->notify_changed();
 
+#ifndef CLIENT_VERSION
 			if (!main_editor_buttons[EDITOR_3D]->is_visible()) { //may be hidden due to feature profile
 				_editor_select(EDITOR_2D);
 			} else {
 				_editor_select(EDITOR_3D);
 			}
+#else
+			_editor_select(EDITOR_PLAY);
+#endif
+
 
 			_update_debug_options();
 
@@ -3716,11 +3724,16 @@ void EditorNode::_set_main_scene_state(Dictionary p_state, Node *p_for_scene) {
 			//use heuristic instead
 			int n2d = 0, n3d = 0;
 			_find_node_types(get_edited_scene(), n2d, n3d);
+#ifndef CLIENT_VERSION
 			if (n2d > n3d) {
 				_editor_select(EDITOR_2D);
 			} else if (n3d > n2d) {
 				_editor_select(EDITOR_3D);
 			}
+#else
+			_editor_select(EDITOR_PLAY);
+#endif
+
 		}
 	}
 
@@ -5951,8 +5964,10 @@ void EditorNode::_feature_profile_changed() {
 		fs_tabs->set_tab_hidden(filesystem_dock->get_index(), fs_dock_disabled);
 		import_tabs->set_tab_hidden(import_dock->get_index(), fs_dock_disabled || profile->is_feature_disabled(EditorFeatureProfile::FEATURE_IMPORT_DOCK));
 
-		main_editor_buttons[EDITOR_3D]->set_visible(!profile->is_feature_disabled(EditorFeatureProfile::FEATURE_3D));
 		main_editor_buttons[EDITOR_SCRIPT]->set_visible(!profile->is_feature_disabled(EditorFeatureProfile::FEATURE_SCRIPT));
+
+#ifndef CLIENT_VERSION
+		main_editor_buttons[EDITOR_3D]->set_visible(!profile->is_feature_disabled(EditorFeatureProfile::FEATURE_3D));
 		if (StreamPeerSSL::is_available())
 			main_editor_buttons[EDITOR_ASSETLIB]->set_visible(!profile->is_feature_disabled(EditorFeatureProfile::FEATURE_ASSET_LIB));
 		if ((profile->is_feature_disabled(EditorFeatureProfile::FEATURE_3D) && singleton->main_editor_buttons[EDITOR_3D]->is_pressed()) ||
@@ -5960,6 +5975,10 @@ void EditorNode::_feature_profile_changed() {
 				(StreamPeerSSL::is_available() && profile->is_feature_disabled(EditorFeatureProfile::FEATURE_ASSET_LIB) && singleton->main_editor_buttons[EDITOR_ASSETLIB]->is_pressed())) {
 			_editor_select(EDITOR_2D);
 		}
+#else
+		_editor_select(EDITOR_SCRIPT);
+#endif
+
 	} else {
 
 		import_tabs->set_tab_hidden(import_dock->get_index(), false);
@@ -5968,10 +5987,12 @@ void EditorNode::_feature_profile_changed() {
 		import_dock->set_visible(true);
 		node_dock->set_visible(true);
 		filesystem_dock->set_visible(true);
-		main_editor_buttons[EDITOR_3D]->set_visible(true);
 		main_editor_buttons[EDITOR_SCRIPT]->set_visible(true);
+#ifndef CLIENT_VERSION
+		main_editor_buttons[EDITOR_3D]->set_visible(true);
 		if (StreamPeerSSL::is_available())
 			main_editor_buttons[EDITOR_ASSETLIB]->set_visible(true);
+#endif
 	}
 
 	_update_dock_slots_visibility();

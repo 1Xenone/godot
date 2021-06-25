@@ -3380,6 +3380,7 @@ void Viewport::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "fxaa"), "set_use_fxaa", "get_use_fxaa");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "debanding"), "set_use_debanding", "get_use_debanding");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "hdr"), "set_hdr", "get_hdr");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "client"), "set_client", "is_client");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "disable_3d"), "set_disable_3d", "is_3d_disabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "keep_3d_linear"), "set_keep_3d_linear", "get_keep_3d_linear");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "usage", PROPERTY_HINT_ENUM, "2D,2D No-Sampling,3D,3D No-Effects"), "set_usage", "get_usage");

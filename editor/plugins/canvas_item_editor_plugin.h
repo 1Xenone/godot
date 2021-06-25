@@ -656,7 +656,11 @@ class CanvasItemEditorPlugin : public EditorPlugin {
 
 public:
 	virtual String get_name() const { return "2D"; }
+#ifdef CLIENT_VERSION
+	bool has_main_screen() const { return false; }
+#else
 	bool has_main_screen() const { return true; }
+#endif
 	virtual void edit(Object *p_object);
 	virtual bool handles(Object *p_object) const;
 	virtual void make_visible(bool p_visible);

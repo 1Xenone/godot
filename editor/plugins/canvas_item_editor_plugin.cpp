@@ -5933,7 +5933,9 @@ bool CanvasItemEditorPlugin::handles(Object *p_object) const {
 }
 
 void CanvasItemEditorPlugin::make_visible(bool p_visible) {
-
+#ifdef CLIENT_VERSION
+	p_visible = false;
+#endif
 	if (p_visible) {
 		canvas_item_editor->show();
 		canvas_item_editor->set_physics_process(true);

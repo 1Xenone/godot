@@ -242,6 +242,9 @@
 		<member name="debug_draw" type="int" setter="set_debug_draw" getter="get_debug_draw" enum="Viewport.DebugDraw" default="0">
 			The overlay mode for test rendered geometry in debug purposes.
 		</member>
+		<member name="client" type="bool" setter="set_client" getter="is_client" default="false">
+			Enabeling client version
+		</member>
 		<member name="disable_3d" type="bool" setter="set_disable_3d" getter="is_3d_disabled" default="false">
 			If [code]true[/code], the viewport will disable 3D rendering. For actual disabling use [code]usage[/code].
 		</member>

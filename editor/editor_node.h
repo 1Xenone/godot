@@ -684,6 +684,12 @@ public:
 
 	static void add_plugin_init_callback(EditorPluginInitializeCallback p_callback);
 
+#ifdef CLIENT_VERSION
+	enum EditorTable {
+		EDITOR_SCRIPT = 0,
+		EDITOR_PLAY
+	};
+#else
 	enum EditorTable {
 		EDITOR_2D = 0,
 		EDITOR_3D,
@@ -691,6 +697,7 @@ public:
 		EDITOR_ASSETLIB,
 		EDITOR_PLAY
 	};
+#endif
 
 	void set_visible_editor(EditorTable p_table) { _editor_select(p_table); }
 	static EditorNode *get_singleton() { return singleton; }
