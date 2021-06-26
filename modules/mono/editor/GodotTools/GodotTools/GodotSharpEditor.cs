@@ -459,7 +459,9 @@ namespace GodotTools
             editorBaseControl.AddChild(errorDialog);
 
             MSBuildPanel = new MSBuildPanel();
+#if CLIENT_VERSION
             bottomPanelBtn = AddControlToBottomPanel(MSBuildPanel, "MSBuild".TTR());
+#endif
 
             AddChild(new HotReloadAssemblyWatcher {Name = "HotReloadAssemblyWatcher"});
 
@@ -521,7 +523,9 @@ namespace GodotTools
                 FocusMode = Control.FocusModeEnum.None
             };
             toolBarButton.Connect("pressed", this, nameof(BuildSolutionPressed));
+#if CLIENT_VERSION
             AddControlToContainer(CustomControlContainer.Toolbar, toolBarButton);
+#endif
 
             if (File.Exists(GodotSharpDirs.ProjectSlnPath) && File.Exists(GodotSharpDirs.ProjectCsProjPath))
             {

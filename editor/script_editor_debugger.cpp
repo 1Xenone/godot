@@ -1664,8 +1664,10 @@ void ScriptEditorDebugger::stop() {
 	inspector->edit(NULL);
 	EditorNode::get_singleton()->get_pause_button()->set_pressed(false);
 	EditorNode::get_singleton()->get_pause_button()->set_disabled(true);
+#ifndef CLIENT_VERSION
 	EditorNode::get_singleton()->get_scene_tree_dock()->hide_remote_tree();
 	EditorNode::get_singleton()->get_scene_tree_dock()->hide_tab_buttons();
+#endif
 
 	if (hide_on_stop) {
 		if (is_visible_in_tree())

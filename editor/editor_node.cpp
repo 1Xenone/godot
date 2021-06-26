@@ -5981,11 +5981,13 @@ void EditorNode::_feature_profile_changed() {
 
 	} else {
 
+#ifndef CLIENT_VERSION
 		import_tabs->set_tab_hidden(import_dock->get_index(), false);
 		node_tabs->set_tab_hidden(node_dock->get_index(), false);
-		fs_tabs->set_tab_hidden(filesystem_dock->get_index(), false);
 		import_dock->set_visible(true);
 		node_dock->set_visible(true);
+#endif
+		fs_tabs->set_tab_hidden(filesystem_dock->get_index(), false);
 		filesystem_dock->set_visible(true);
 		main_editor_buttons[EDITOR_SCRIPT]->set_visible(true);
 #ifndef CLIENT_VERSION
@@ -6614,7 +6616,9 @@ EditorNode::EditorNode() {
 	scene_tabs_context_menu->connect("id_pressed", this, "_menu_option");
 	scene_tabs_context_menu->set_hide_on_window_lose_focus(true);
 
+#ifndef CLIENT_VERSION
 	srt->add_child(tabbar_container);
+#endif
 	tabbar_container->add_child(scene_tabs);
 	distraction_free = memnew(ToolButton);
 #ifdef OSX_ENABLED
@@ -6656,7 +6660,9 @@ EditorNode::EditorNode() {
 	scene_root_parent->add_child(viewport);
 
 	HBoxContainer *left_menu_hb = memnew(HBoxContainer);
+#ifndef CLIENT_VERSION
 	menu_hb->add_child(left_menu_hb);
+#endif
 
 	file_menu = memnew(MenuButton);
 	file_menu->set_flat(false);
@@ -6950,7 +6956,9 @@ EditorNode::EditorNode() {
 	pause_button->set_focus_mode(Control::FOCUS_NONE);
 	pause_button->set_tooltip(TTR("Pause the scene execution for debugging."));
 	pause_button->set_disabled(true);
+#ifndef CLIENT_VERSION
 	play_hb->add_child(pause_button);
+#endif
 #ifdef OSX_ENABLED
 	pause_button->set_shortcut(ED_SHORTCUT("editor/pause_scene", TTR("Pause Scene"), KEY_MASK_CMD | KEY_MASK_CTRL | KEY_Y));
 #else
@@ -6975,7 +6983,9 @@ EditorNode::EditorNode() {
 	run_native->connect("native_run", this, "_menu_option", varray(RUN_PLAY_NATIVE));
 
 	play_scene_button = memnew(ToolButton);
+#ifndef CLIENT_VERSION
 	play_hb->add_child(play_scene_button);
+#endif
 	play_scene_button->set_toggle_mode(true);
 	play_scene_button->set_focus_mode(Control::FOCUS_NONE);
 	play_scene_button->set_icon(gui_base->get_icon("PlayScene", "EditorIcons"));
@@ -6988,7 +6998,9 @@ EditorNode::EditorNode() {
 #endif
 
 	play_custom_scene_button = memnew(ToolButton);
+#ifndef CLIENT_VERSION
 	play_hb->add_child(play_custom_scene_button);
+#endif
 	play_custom_scene_button->set_toggle_mode(true);
 	play_custom_scene_button->set_focus_mode(Control::FOCUS_NONE);
 	play_custom_scene_button->set_icon(gui_base->get_icon("PlayCustom", "EditorIcons"));
@@ -7009,7 +7021,9 @@ EditorNode::EditorNode() {
 	video_driver->set_focus_mode(Control::FOCUS_NONE);
 	video_driver->connect("item_selected", this, "_video_driver_selected");
 	video_driver->add_font_override("font", gui_base->get_font("bold", "EditorFonts"));
+#ifndef CLIENT_VERSION
 	right_menu_hb->add_child(video_driver);
+#endif
 
 	String video_drivers = ProjectSettings::get_singleton()->get_custom_property_info()["rendering/quality/driver/driver_name"].hint_string;
 	String current_video_driver = OS::get_singleton()->get_video_driver_name(OS::get_singleton()->get_current_video_driver());
@@ -7065,6 +7079,10 @@ EditorNode::EditorNode() {
 	filesystem_dock->connect("instance", this, "_instance_request");
 	filesystem_dock->connect("display_mode_changed", this, "_save_docks");
 
+#ifdef CLIENT_VERSION
+	// Hide unused dock slots and vsplits
+	dock_slot[DOCK_SLOT_RIGHT_UL]->hide();
+#else	
 	// Scene: Top left
 	dock_slot[DOCK_SLOT_LEFT_UR]->add_child(scene_tree_dock);
 	dock_slot[DOCK_SLOT_LEFT_UR]->set_tab_title(scene_tree_dock->get_index(), TTR("Scene"));
@@ -7073,10 +7091,6 @@ EditorNode::EditorNode() {
 	dock_slot[DOCK_SLOT_LEFT_UR]->add_child(import_dock);
 	dock_slot[DOCK_SLOT_LEFT_UR]->set_tab_title(import_dock->get_index(), TTR("Import"));
 
-	// FileSystem: Bottom left
-	dock_slot[DOCK_SLOT_LEFT_BR]->add_child(filesystem_dock);
-	dock_slot[DOCK_SLOT_LEFT_BR]->set_tab_title(filesystem_dock->get_index(), TTR("FileSystem"));
-
 	// Inspector: Full height right
 	dock_slot[DOCK_SLOT_RIGHT_UL]->add_child(inspector_dock);
 	dock_slot[DOCK_SLOT_RIGHT_UL]->set_tab_title(inspector_dock->get_index(), TTR("Inspector"));
@@ -7084,6 +7098,11 @@ EditorNode::EditorNode() {
 	// Node: Full height right, behind Inspector
 	dock_slot[DOCK_SLOT_RIGHT_UL]->add_child(node_dock);
 	dock_slot[DOCK_SLOT_RIGHT_UL]->set_tab_title(node_dock->get_index(), TTR("Node"));
+#endif
+
+	// FileSystem: Bottom left
+	dock_slot[DOCK_SLOT_LEFT_BR]->add_child(filesystem_dock);
+	dock_slot[DOCK_SLOT_LEFT_BR]->set_tab_title(filesystem_dock->get_index(), TTR("FileSystem"));
 
 	// Hide unused dock slots and vsplits
 	dock_slot[DOCK_SLOT_LEFT_UL]->hide();

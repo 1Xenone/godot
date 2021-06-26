@@ -46,6 +46,9 @@
 #include "scene/main/viewport.h"
 #include "scene/resources/packed_scene.h"
 
+const String userScriptFolder = "res://Lessons/MarsLanding/Scripts/Learner";
+const String userScriptPath = "res://Lessons/MarsLanding/Scripts/Learner/UserScript.cs";
+
 Ref<Texture> FileSystemDock::_get_tree_item_icon(EditorFileSystemDirectory *p_dir, int p_idx) {
 	Ref<Texture> file_icon;
 	if (!p_dir->get_file_import_is_valid(p_idx)) {
@@ -715,7 +718,12 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
 		} else {
 			if (display_mode == DISPLAY_MODE_TREE_ONLY || always_show_folders) {
 				// Display folders in the list.
-				if (directory != "res://") {
+				if (directory != "res://"
+#ifdef CLIENT_VERSION
+					&& directory.substr(0, userScriptFolder.length()) == userScriptFolder
+					&& directory.length() > userScriptFolder.length()
+#endif
+				) {
 					files->add_item("..", folder_icon, true);
 
 					String bd = directory.get_base_dir();
@@ -1895,6 +1903,10 @@ void FileSystemDock::set_file_list_display_mode(FileListDisplayMode p_mode) {
 		return;
 
 	_toggle_file_display();
+
+#ifdef CLIENT_VERSION
+	_navigate_to_path(path);
+#endif
 }
 
 Variant FileSystemDock::get_drag_data_fw(const Point2 &p_point, Control *p_from) {
@@ -2600,6 +2612,9 @@ FileSystemDock::FileSystemDock(EditorNode *p_editor) {
 	set_name("FileSystem");
 	editor = p_editor;
 	path = "res://";
+#ifdef CLIENT_VERSION
+	path = userScriptPath;
+#endif
 
 	// `KEY_MASK_CMD | KEY_C` conflicts with other editor shortcuts.
 	ED_SHORTCUT("filesystem_dock/copy_path", TTR("Copy Path"), KEY_MASK_CMD | KEY_MASK_SHIFT | KEY_C);
@@ -2608,8 +2623,9 @@ FileSystemDock::FileSystemDock(EditorNode *p_editor) {
 	ED_SHORTCUT("filesystem_dock/rename", TTR("Rename..."), KEY_F2);
 
 	VBoxContainer *top_vbc = memnew(VBoxContainer);
+#ifndef CLIENT_VERSION
 	add_child(top_vbc);
-
+#endif
 	HBoxContainer *toolbar_hbc = memnew(HBoxContainer);
 	toolbar_hbc->add_constant_override("separation", 0);
 	top_vbc->add_child(toolbar_hbc);
@@ -2676,8 +2692,9 @@ FileSystemDock::FileSystemDock(EditorNode *p_editor) {
 	tree->set_allow_rmb_select(true);
 	tree->set_select_mode(Tree::SELECT_MULTI);
 	tree->set_custom_minimum_size(Size2(0, 15 * EDSCALE));
+#ifndef CLIENT_VERSION
 	split_box->add_child(tree);
-
+#endif
 	tree->connect("item_activated", this, "_tree_activate_file");
 	tree->connect("multi_selected", this, "_tree_multi_selected");
 	tree->connect("item_rmb_selected", this, "_tree_rmb_select");
@@ -2690,8 +2707,9 @@ FileSystemDock::FileSystemDock(EditorNode *p_editor) {
 	split_box->add_child(file_list_vb);
 
 	path_hb = memnew(HBoxContainer);
+#ifndef CLIENT_VERSION
 	file_list_vb->add_child(path_hb);
-
+#endif
 	file_list_search_box = memnew(LineEdit);
 	file_list_search_box->set_h_size_flags(SIZE_EXPAND_FILL);
 	file_list_search_box->set_placeholder(TTR("Search files"));
