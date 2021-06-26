@@ -50,7 +50,10 @@ void MenuButton::_unhandled_key_input(Ref<InputEvent> p_event) {
 }
 
 void MenuButton::pressed() {
-
+	if(disable_button){
+		return;
+	}
+	
 	emit_signal("about_to_show");
 	Size2 size = get_size();
 
@@ -122,6 +125,12 @@ void MenuButton::set_disable_shortcuts(bool p_disabled) {
 
 	disable_shortcuts = p_disabled;
 }
+
+void MenuButton::set_disable_button(bool p_disabled) {
+
+	disable_button = p_disabled;
+}
+
 
 MenuButton::MenuButton() {
 

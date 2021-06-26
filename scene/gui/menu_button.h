@@ -41,6 +41,7 @@ class MenuButton : public Button {
 	bool clicked;
 	bool switch_on_hover;
 	bool disable_shortcuts;
+	bool disable_button;
 	PopupMenu *popup;
 
 	void _unhandled_key_input(Ref<InputEvent> p_event);
@@ -60,6 +61,7 @@ public:
 	void set_switch_on_hover(bool p_enabled);
 	bool is_switch_on_hover();
 	void set_disable_shortcuts(bool p_disabled);
+	void set_disable_button(bool p_disabled);
 
 	MenuButton();
 	~MenuButton();

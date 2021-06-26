@@ -6660,15 +6660,17 @@ EditorNode::EditorNode() {
 	scene_root_parent->add_child(viewport);
 
 	HBoxContainer *left_menu_hb = memnew(HBoxContainer);
-#ifndef CLIENT_VERSION
 	menu_hb->add_child(left_menu_hb);
-#endif
 
 	file_menu = memnew(MenuButton);
 	file_menu->set_flat(false);
 	file_menu->set_switch_on_hover(true);
+#ifndef CLIENT_VERSION
 	file_menu->set_text(TTR("Scene"));
 	file_menu->add_style_override("hover", gui_base->get_stylebox("MenuHover", "EditorStyles"));
+#else
+	file_menu->set_disable_button(true);
+#endif
 	left_menu_hb->add_child(file_menu);
 
 	prev_scene = memnew(ToolButton);
@@ -6772,7 +6774,9 @@ EditorNode::EditorNode() {
 	project_menu->set_tooltip(TTR("Miscellaneous project or scene-wide tools."));
 	project_menu->set_text(TTR("Project"));
 	project_menu->add_style_override("hover", gui_base->get_stylebox("MenuHover", "EditorStyles"));
+#ifndef CLIENT_VERSION
 	left_menu_hb->add_child(project_menu);
+#endif
 
 	p = project_menu->get_popup();
 	p->set_hide_on_window_lose_focus(true);
@@ -6821,7 +6825,9 @@ EditorNode::EditorNode() {
 	debug_menu->set_switch_on_hover(true);
 	debug_menu->set_text(TTR("Debug"));
 	debug_menu->add_style_override("hover", gui_base->get_stylebox("MenuHover", "EditorStyles"));
+#ifndef CLIENT_VERSION
 	left_menu_hb->add_child(debug_menu);
+#endif
 
 	p = debug_menu->get_popup();
 	p->set_hide_on_window_lose_focus(true);
@@ -6863,7 +6869,9 @@ EditorNode::EditorNode() {
 	settings_menu->set_switch_on_hover(true);
 	settings_menu->set_text(TTR("Editor"));
 	settings_menu->add_style_override("hover", gui_base->get_stylebox("MenuHover", "EditorStyles"));
+#ifndef CLIENT_VERSION
 	left_menu_hb->add_child(settings_menu);
+#endif
 
 	p = settings_menu->get_popup();
 	p->set_hide_on_window_lose_focus(true);
@@ -6915,7 +6923,9 @@ EditorNode::EditorNode() {
 	help_menu->set_switch_on_hover(true);
 	help_menu->set_text(TTR("Help"));
 	help_menu->add_style_override("hover", gui_base->get_stylebox("MenuHover", "EditorStyles"));
+#ifndef CLIENT_VERSION
 	left_menu_hb->add_child(help_menu);
+#endif
 
 	p = help_menu->get_popup();
 	p->set_hide_on_window_lose_focus(true);
