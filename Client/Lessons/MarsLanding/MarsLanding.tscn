@@ -16,7 +16,7 @@
 [ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/Ship.tres" type="Resource" id=14]
 [ext_resource path="res://Lessons/MarsLanding/Graphics/kisspng-clip-art-portable-network-graphics-explosion-trans-explosion-clipart-softball-free-clipart-on-5ccf6a80ee7d09.7609118515570970889769.png" type="Texture" id=15]
 [ext_resource path="res://Lessons/MarsLanding/Scripts/Learner/UserScript.cs" type="Script" id=16]
-[ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/Lvl1.tres" type="Resource" id=17]
+[ext_resource path="res://addons/my_custom_dock/TestCases/gameInjection.tres" type="Resource" id=17]
 [ext_resource path="res://Lessons/MarsLanding/Scripts/Level/UI.gd" type="Script" id=18]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -190,11 +190,6 @@ points = PoolVector2Array( 133, 133, 0, 133, 0, 0, 133, 0 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
-"frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
-"loop": true,
-"name": "Speed3",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 1 ), ExtResource( 6 ) ],
 "loop": true,
 "name": "Speed2",
@@ -208,6 +203,11 @@ animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 11 ) ],
 "loop": true,
 "name": "Speed4",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
+"loop": true,
+"name": "Speed3",
 "speed": 5.0
 } ]
 
@@ -225,8 +225,6 @@ height = 13.5751
 position = Vector2( 664.878, 531 )
 collision_layer = 0
 script = ExtResource( 12 )
-ship = ExtResource( 14 )
-lvl = ExtResource( 17 )
 
 [node name="pad" type="CollisionShape2D" parent="Finish"]
 position = Vector2( 0, 26.8 )
@@ -242,6 +240,7 @@ format = 1
 tile_data = PoolIntArray( 393220, 9, 0, 393221, 7, 0, 393230, 9, 0, 393231, 4, 0, 458752, 6, 0, 458753, 7, 0, 458754, 9, 0, 458755, 4, 0, 458756, 8, 0, 458757, 1, 0, 458758, 6, 0, 458759, 7, 0, 458764, 9, 0, 458765, 4, 0, 458766, 8, 0, 458767, 3, 0, 524288, 3, 0, 524289, 1, 0, 524290, 8, 0, 524291, 3, 0, 524292, 3, 0, 524293, 3, 0, 524294, 3, 0, 524295, 1, 0, 524296, 0, 0, 524297, 0, 0, 524298, 0, 0, 524299, 0, 0, 524300, 8, 0, 524301, 3, 0, 524302, 3, 0, 524303, 3, 0 )
 
 [node name="Ground" type="Area2D" parent="Map"]
+visible = false
 collision_layer = 0
 script = ExtResource( 13 )
 ship = ExtResource( 14 )
@@ -252,8 +251,6 @@ polygon = PoolVector2Array( 1.12253, 930.617, 263.52, 1062.76, 663.555, 859.751,
 [node name="Spacecraft" type="Node2D" parent="."]
 position = Vector2( 660, 170 )
 script = ExtResource( 2 )
-ship = ExtResource( 14 )
-lvl = ExtResource( 17 )
 
 [node name="UserScript" type="Node" parent="Spacecraft"]
 script = ExtResource( 16 )
@@ -286,12 +283,10 @@ shape = SubResource( 6 )
 
 [node name="SpacecraftController" type="Node" parent="."]
 script = ExtResource( 8 )
-ship = ExtResource( 14 )
-lvl = ExtResource( 17 )
+gameInjection = ExtResource( 17 )
 
 [node name="UI" type="Node" parent="."]
 script = ExtResource( 18 )
-ship = ExtResource( 14 )
 
 [node name="Fuel" type="RichTextLabel" parent="UI"]
 margin_left = 70.0

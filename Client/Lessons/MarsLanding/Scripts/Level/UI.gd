@@ -1,11 +1,10 @@
 extends Node
 
-export(Resource) var ship
+onready var ship = GV.ship
 
 var fuelText = "FUEL                    "
 var vspeedText = "VERTICAL SPEED  "
 var vdistanceText = "DISTANCE          "
-
 
 func _process(delta):
 	get_node("Fuel").text = fuelText + String(int(ship.Fuel))

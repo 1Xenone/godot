@@ -1,0 +1,29 @@
+[gd_resource type="Resource" load_steps=6 format=2]
+
+[ext_resource path="res://addons/my_custom_dock/TestCases/SOGameInjection.gd" type="Script" id=1]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/SO/SOLevel.gd" type="Script" id=2]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/SO/SOShip.gd" type="Script" id=3]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+mars_gravity = 3.2
+frameDuration = 0.5
+landingSpeed = 10.0
+timeBeforeClosing = 2.0
+shipPosition = Vector2( 660, 170 )
+landingPad = [ Vector2( 530, 505 ), Vector2( 800, 505 ) ]
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 3 )
+vSpeed = 10.0
+vDistance = 0.0
+Fuel = 80.0
+thrust = 0.0
+state = 0
+
+[resource]
+script = ExtResource( 1 )
+ship = SubResource( 2 )
+lvl = SubResource( 1 )
+hasEnded = false
+hasSucceeded = true

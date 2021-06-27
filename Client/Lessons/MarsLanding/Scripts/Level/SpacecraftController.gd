@@ -1,46 +1,43 @@
-extends Node
+class_name SpaceController extends Node
 
-export(Resource) var ship
-export(Resource) var lvl
-
-
-var userScriptPath = "res://Lessons/MarsLanding/Scripts/Learner/UserScript.cs"
-var csharp_script = load(userScriptPath)
-var csharp_node = csharp_script.new()
-
-
-func OneSecondSimulation(thrust, delta):
-	ship.vSpeed += (lvl.mars_gravity - thrust) * delta
-	ship.vDistance -= ship.vSpeed * delta
+export(Resource) var gameInjection
 
 var shipNode
 var finishNode
 
+var startup
+
+func _enter_tree():
+	GV.ship = gameInjection.ship
+	GV.lvl = gameInjection.lvl
+	startup = TestStartup.new(GV.lvl, GV.ship)
+	gameInjection = preload("res://addons/my_custom_dock/TestCases/gameInjection.tres")
+	gameInjection.hasEnded = false
+	gameInjection.hasSucceeded = false
+	err(ResourceSaver.save("res://addons/my_custom_dock/TestCases/gameInjection.tres", gameInjection))
+
 func _ready():
 	shipNode = get_parent().get_node("Spacecraft")
 	finishNode = get_parent().get_node("Finish")
-	
-	ship.vSpeed = lvl.initialSpeed
-	ship.Fuel = lvl.initialFuel
-	ship.vDistance = finishNode.position.y - shipNode.position.y
 
-onready var timefromPreviousUpdate = lvl.frameDuration
 func _process(delta):
-	if(ship.state != ship.GameState.Running):
+	if(gameInjection.hasEnded):
 		return
 	
-	while(timefromPreviousUpdate >= lvl.frameDuration
-	  && ship.state == ship.GameState.Running):
-		timefromPreviousUpdate -= lvl.frameDuration
-		if(ship.Fuel > 0):
-			ship.thrust = csharp_node.Update(ship.vSpeed, ship.vDistance)
-			ship.Fuel -= ship.thrust
-			if(ship.Fuel < 0):
-				ship.Fuel = 0
-		else:
-			ship.thrust = 0
+	match(GV.ship.state):
+		GV.ship.GameState.Landed:
+			gameInjection = preload("res://addons/my_custom_dock/TestCases/gameInjection.tres")
+			gameInjection.hasEnded = true
+			gameInjection.hasSucceeded = true
+			err(ResourceSaver.save("res://addons/my_custom_dock/TestCases/gameInjection.tres", gameInjection))
+		GV.ship.GameState.Crashed:
+			gameInjection = preload("res://addons/my_custom_dock/TestCases/gameInjection.tres")
+			gameInjection.hasEnded = true
+			gameInjection.hasSucceeded = false
+			err(ResourceSaver.save("res://addons/my_custom_dock/TestCases/gameInjection.tres", gameInjection))
 	
-	timefromPreviousUpdate += delta
-	OneSecondSimulation(ship.thrust, delta / lvl.frameDuration)
-	shipNode.position.y = finishNode.position.y - ship.vDistance 
-
+	if(GV.ship.state != GV.ship.GameState.Running):
+		return
+	
+	startup.Update(delta)
+	shipNode.position.y = finishNode.position.y - GV.ship.vDistance 

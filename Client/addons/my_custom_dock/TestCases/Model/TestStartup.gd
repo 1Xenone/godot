@@ -1,48 +1,53 @@
+extends Resource
 class_name TestStartup
 
-var lvl : Resource
-var ship : Resource
+export(Resource) var lvl 
+export(Resource) var ship
 var shipPhysics : ShipPhysics
 var gameStates : GameStates
 
-export(bool) var hasEnded = false
-export(bool) var hasSucceded = false
+var hasEnded = false
 
-export(int) var framesPerLog = 15
+var framesPerLog = 15
+var speedX = 8
+var fixedUpdate = 0.05
 
-var frameDutartion
-var previousUpdateTime
+var logInterval
+var previousLogTime
 func _init(_lvl, _ship):
-	lvl = _lvl.duplicate()
-	ship = _ship.duplicate()
+	lvl = _lvl
+	ship = _ship
 	shipPhysics = ShipPhysics.new(lvl, ship)
 	gameStates = GameStates.new(lvl, ship, shipPhysics)
-	frameDutartion = _lvl.frameDuration * framesPerLog
-	previousUpdateTime = frameDutartion
+	logInterval = _lvl.frameDuration * framesPerLog
+	previousLogTime = logInterval
 	hasEnded = false
 
-
+var previousUpdateTime = 0
 func Update(delta):
 	if(hasEnded):
 		return
-	delta = 0.1
-	gameStates.Update(delta)
-	if(frameDutartion <= previousUpdateTime):
-		Log()
-		previousUpdateTime -= frameDutartion
+	delta = delta * speedX
+	
 	previousUpdateTime += delta
+	while(previousUpdateTime > fixedUpdate):
+		previousUpdateTime -= fixedUpdate
+		gameStates.Update(fixedUpdate)
+	
+	if(logInterval <= previousLogTime):
+		Log()
+		previousLogTime -= logInterval
+	previousLogTime += delta
 	
 	match(ship.state):
 		ship.GameState.Landed:
 			Log()
 			print("Successfuly landed with fuel " + String(ship.Fuel))
 			hasEnded = true
-			hasSucceded = true
 		ship.GameState.Crashed:
 			Log()
 			print("Crashed")
 			hasEnded = true
-			hasSucceded = false
 
 
 func Log():

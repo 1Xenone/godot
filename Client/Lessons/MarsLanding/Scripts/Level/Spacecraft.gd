@@ -1,7 +1,7 @@
 extends Node2D
 
-export(Resource) var ship
-export(Resource) var lvl
+onready var ship = GV.ship
+onready var lvl = GV.lvl
 
 enum GameState {Running, Crashed, Landed}
 
@@ -40,3 +40,4 @@ func ClosingUpdate(delta):
 	closingTime += delta
 	if(lvl.timeBeforeClosing < closingTime):
 		get_tree().quit()
+

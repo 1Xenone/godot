@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/my_custom_dock/TestCases/TestCase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/my_custom_dock/TestCases/List.gd" type="Script" id=2]
 [ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/StraightLanding.tres" type="Resource" id=3]
+[ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/HighAltitudeLanding.tres" type="Resource" id=4]
+[ext_resource path="res://addons/my_custom_dock/TestCases/SubmitBtn.tscn" type="PackedScene" id=5]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -13,25 +15,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="."]
-margin_left = 5.35144
-margin_top = 5.35144
-margin_right = 116.351
-margin_bottom = 19.3514
-text = "Test cases"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="List" type="VBoxContainer" parent="."]
 margin_left = 1.0
-margin_top = 29.0
-margin_right = 372.0
-margin_bottom = 259.0
+margin_top = 9.0
+margin_right = 339.0
+margin_bottom = 239.0
 rect_min_size = Vector2( 0, 35 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 testCaseScene = ExtResource( 1 )
-tests = [ ExtResource( 3 ), ExtResource( 3 ) ]
+tests = [ ExtResource( 3 ), ExtResource( 4 ) ]
+submitBtn = ExtResource( 5 )
