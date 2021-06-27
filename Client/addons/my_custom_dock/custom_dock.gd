@@ -10,7 +10,7 @@ func _enter_tree():
 	# Initialization of the plugin goes here.
 	# Load the dock scene and instance it.
 	dock = preload("res://addons/my_custom_dock/my_dock.tscn").instance()
-
+	dock.name = "Tests"
 	# Add the loaded scene to the docks.
 	add_control_to_dock(DOCK_SLOT_LEFT_UL, dock)
 	# Note that LEFT_UL means the left of the editor, upper-left dock.

@@ -4964,6 +4964,9 @@ void EditorNode::_load_docks_from_config(Ref<ConfigFile> p_layout, const String 
 	if (p_layout->has_section_key(p_section, "dock_filesystem_display_mode")) {
 		FileSystemDock::DisplayMode dock_filesystem_display_mode = FileSystemDock::DisplayMode(int(p_layout->get_value(p_section, "dock_filesystem_display_mode")));
 		filesystem_dock->set_display_mode(dock_filesystem_display_mode);
+#ifdef CLIENT_VERSION
+		filesystem_dock->set_display_mode(FileSystemDock::DisplayMode::DISPLAY_MODE_SPLIT);
+#endif
 	}
 
 	if (p_layout->has_section_key(p_section, "dock_filesystem_file_list_display_mode")) {
@@ -6665,11 +6668,11 @@ EditorNode::EditorNode() {
 	file_menu = memnew(MenuButton);
 	file_menu->set_flat(false);
 	file_menu->set_switch_on_hover(true);
-#ifndef CLIENT_VERSION
+#ifdef CLIENT_VERSION
+	file_menu->set_disable_button(true);
+#else
 	file_menu->set_text(TTR("Scene"));
 	file_menu->add_style_override("hover", gui_base->get_stylebox("MenuHover", "EditorStyles"));
-#else
-	file_menu->set_disable_button(true);
 #endif
 	left_menu_hb->add_child(file_menu);
 

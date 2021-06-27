@@ -178,6 +178,10 @@ void EditorRunNative::set_run_in_editor(bool p_enabled) {
 
 bool EditorRunNative::is_run_in_editor_enabled() const {
 
+#ifdef CLIENT_VERSION
+	return true;
+#endif
+
 	return run_in_editor;
 }
 
