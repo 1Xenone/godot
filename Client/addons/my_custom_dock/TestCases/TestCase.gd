@@ -15,6 +15,8 @@ var lvl
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if(!testCase):
+		return
 	ship = testCase.ship.duplicate()
 	lvl = testCase.lvl.duplicate()
 	

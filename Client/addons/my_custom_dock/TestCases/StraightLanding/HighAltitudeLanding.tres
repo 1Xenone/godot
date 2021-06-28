@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=6 format=2]
+
+[ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/Ship.tres" type="Resource" id=1]
+[ext_resource path="res://Lessons/MarsLanding/Scripts/Learner/UserScript.cs" type="Script" id=2]
+[ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/Lvl1.tres" type="Resource" id=3]
+[ext_resource path="res://addons/my_custom_dock/TestCases/SOTestCase.gd" type="Script" id=4]
+[ext_resource path="res://addons/my_custom_dock/TestCases/StraightLanding/LandingTest.gd" type="Script" id=5]
+
+[resource]
+script = ExtResource( 4 )
+name = "High altitude landing"
+scriptTestCase = ExtResource( 5 )
+userScript = ExtResource( 2 )
+lvl = ExtResource( 3 )
+ship = ExtResource( 1 )

@@ -1,7 +1,7 @@
 extends Node2D
 
-onready var ship = GV.ship
-onready var lvl = GV.lvl
+var ship
+var lvl
 
 enum GameState {Running, Crashed, Landed}
 
@@ -41,3 +41,8 @@ func ClosingUpdate(delta):
 	if(lvl.timeBeforeClosing < closingTime):
 		get_tree().quit()
 
+
+
+func _on_SpacecraftController_Init(_ship, _lvl):
+	ship = _ship
+	lvl = _lvl

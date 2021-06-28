@@ -16,7 +16,7 @@ landingPad = [ Vector2( 530, 505 ), Vector2( 800, 505 ) ]
 [sub_resource type="Resource" id=2]
 script = ExtResource( 3 )
 vSpeed = 10.0
-vDistance = 0.0
+vDistance = 335.0
 Fuel = 80.0
 thrust = 0.0
 state = 0
@@ -25,5 +25,5 @@ state = 0
 script = ExtResource( 1 )
 ship = SubResource( 2 )
 lvl = SubResource( 1 )
-hasEnded = false
+hasEnded = true
 hasSucceeded = true

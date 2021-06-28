@@ -66,10 +66,6 @@ config/name="Client"
 run/main_scene="res://Lessons/MarsLanding/MarsLanding.tscn"
 config/icon="res://icon.png"
 
-[autoload]
-
-GV="*res://GlobalVariables.gd"
-
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/my_custom_dock/plugin.cfg", "res://addons/tests/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/my_custom_dock/plugin.cfg" )
