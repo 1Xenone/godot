@@ -39,7 +39,7 @@ var closingTime = 0
 func ClosingUpdate(delta):
 	closingTime += delta
 	if(lvl.timeBeforeClosing < closingTime):
-		get_tree().quit()
+		run_scene()
 
 
 

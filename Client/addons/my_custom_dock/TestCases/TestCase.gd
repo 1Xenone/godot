@@ -45,10 +45,11 @@ func _on_PlayTest_pressed():
 	gameInjection.ship = ship
 	gameInjection.hasEnded = false
 	err(ResourceSaver.save("res://addons/my_custom_dock/TestCases/gameInjection.tres", gameInjection))
-	run_scene()
+	
 
 
 var useLogs = false
 
 func _on_See_log_pressed():
 	useLogs = true
+

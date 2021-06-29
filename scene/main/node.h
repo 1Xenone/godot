@@ -334,7 +334,7 @@ public:
 	void set_process(bool p_idle_process);
 	void error(int error_code);
 	void run_scene();
-	void run_current_scene();
+	void stop_scene();
 	float get_process_delta_time() const;
 	bool is_processing() const;
 

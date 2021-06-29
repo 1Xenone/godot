@@ -680,6 +680,8 @@ protected:
 	void set_current_tab(int p_tab);
 
 public:
+	static ToolButton *playNode;
+
 	bool call_build();
 
 	static void add_plugin_init_callback(EditorPluginInitializeCallback p_callback);
@@ -897,6 +899,8 @@ public:
 	bool ensure_main_scene(bool p_from_native);
 
 	void run_play();
+	void run_editor_play();
+	void run_editor_stop();
 	void run_play_current();
 	void run_play_custom(const String &p_custom);
 	void run_stop();

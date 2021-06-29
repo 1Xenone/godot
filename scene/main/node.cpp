@@ -825,12 +825,12 @@ void Node::error(int error_code)
 
 void Node::run_scene()
 {
-	EditorNode::get_singleton()->run_play();
+	EditorNode::get_singleton()->run_editor_play();
 }
 
-void Node::run_current_scene()
+void Node::stop_scene()
 {
-	EditorNode::get_singleton()->run_play_current();
+	EditorNode::get_singleton()->run_editor_stop();
 }
 
 bool Node::is_processing() const {
@@ -2855,7 +2855,7 @@ void Node::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_process", "enable"), &Node::set_process);
 	ClassDB::bind_method(D_METHOD("err", "error_code"), &Node::error);
 	ClassDB::bind_method(D_METHOD("run_scene"), &Node::run_scene);
-	ClassDB::bind_method(D_METHOD("run_current_scene"), &Node::run_current_scene);
+	ClassDB::bind_method(D_METHOD("stop_scene"), &Node::stop_scene);
 	ClassDB::bind_method(D_METHOD("set_process_priority", "priority"), &Node::set_process_priority);
 	ClassDB::bind_method(D_METHOD("get_process_priority"), &Node::get_process_priority);
 	ClassDB::bind_method(D_METHOD("is_processing"), &Node::is_processing);

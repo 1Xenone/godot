@@ -195,14 +195,14 @@ animations = [ {
 "name": "Speed2",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 3 ), ExtResource( 11 ) ],
-"loop": true,
-"name": "Speed4",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
 "loop": true,
 "name": "Speed3",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "Speed4",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
@@ -321,6 +321,6 @@ __meta__ = {
 [node name="Node" type="Node" parent="."]
 
 [connection signal="area_shape_entered" from="Finish" to="Finish" method="_on_Finish_area_shape_entered"]
-[connection signal="Init" from="SpacecraftController" to="Spacecraft" method="_on_SpacecraftController_Init"]
 [connection signal="Init" from="SpacecraftController" to="Finish" method="_on_SpacecraftController_Init"]
 [connection signal="Init" from="SpacecraftController" to="UI" method="_on_SpacecraftController_Init"]
+[connection signal="Init" from="SpacecraftController" to="Spacecraft" method="_on_SpacecraftController_Init"]

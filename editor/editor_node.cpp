@@ -171,8 +171,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 EditorNode *EditorNode::singleton = NULL;
+
+ToolButton *EditorNode::playNode = NULL;
 
 void EditorNode::disambiguate_filenames(const Vector<String> p_full_paths, Vector<String> &r_filenames) {
 	// Keep track of a list of "index sets," i.e. sets of indices
@@ -1065,7 +1066,6 @@ void EditorNode::save_resource_as(const Ref<Resource> &p_resource, const String 
 }
 
 void EditorNode::_menu_option(int p_option) {
-
 	_menu_option_confirm(p_option, false);
 }
 
@@ -5085,12 +5085,21 @@ void EditorNode::run_play() {
 			_menu_option_confirm(RUN_STOP, true);
 		}
 		else{
+			//_menu_option(RUN_PLAY);
 			_editor_playback_run(false);
 		}
 	} else {
 		_menu_option_confirm(RUN_STOP, true);
 		_run(false);
 	}
+}
+
+void EditorNode::run_editor_play() {
+	playNode->press();
+}
+
+void EditorNode::run_editor_stop() {
+	_menu_option_confirm(RUN_STOP, true);
 }
 
 void EditorNode::run_play_current() {
@@ -6955,6 +6964,7 @@ EditorNode::EditorNode() {
 	play_button->set_toggle_mode(true);
 	play_button->set_icon(gui_base->get_icon("MainPlay", "EditorIcons"));
 	play_button->set_focus_mode(Control::FOCUS_NONE);
+	EditorNode::playNode = play_button;
 	play_button->connect("pressed", this, "_menu_option", make_binds(RUN_PLAY));
 	play_button->set_tooltip(TTR("Play the project."));
 #ifdef OSX_ENABLED

@@ -94,6 +94,8 @@ public:
 
 	/* Signals */
 
+	void press() {_pressed();}
+
 	bool is_pressed() const; ///< return whether button is pressed (toggled in)
 	bool is_pressing() const; ///< return whether button is pressed (toggled in)
 	bool is_hovered() const;
