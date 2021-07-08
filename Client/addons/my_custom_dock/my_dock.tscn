@@ -15,20 +15,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="."]
-margin_left = 5.35144
-margin_top = 5.35144
-margin_right = 116.351
-margin_bottom = 19.3514
-text = "Test cases"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="List" type="VBoxContainer" parent="."]
 margin_left = 1.0
 margin_top = 9.0
-margin_right = 339.0
+margin_right = 308.0
 margin_bottom = 239.0
 rect_min_size = Vector2( 0, 35 )
 script = ExtResource( 2 )

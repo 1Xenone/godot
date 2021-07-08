@@ -10,20 +10,20 @@ mars_gravity = 3.2
 frameDuration = 0.5
 landingSpeed = 10.0
 timeBeforeClosing = 2.0
-shipPosition = Vector2( 660, 504.376 )
+shipPosition = Vector2( 660, 170 )
 landingPad = [ Vector2( 530, 505 ), Vector2( 800, 505 ) ]
 
 [sub_resource type="Resource" id=2]
 script = ExtResource( 3 )
-vSpeed = 1.04
-vDistance = 0.624
-Fuel = 29.6
-thrust = 4
-state = 2
+vSpeed = 10.0
+vDistance = 335.0
+Fuel = 80.0
+thrust = 0.0
+state = 0
 
 [resource]
 script = ExtResource( 1 )
 ship = SubResource( 2 )
 lvl = SubResource( 1 )
-hasEnded = true
+hasEnded = false
 hasSucceeded = true

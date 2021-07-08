@@ -35,14 +35,17 @@ func _process(delta):
 		4:
 			get_node("fire").play("Speed4")
 
+var hasClosed = false
 var closingTime = 0
 func ClosingUpdate(delta):
 	closingTime += delta
-	if(lvl.timeBeforeClosing < closingTime):
+	if(!hasClosed && lvl.timeBeforeClosing < closingTime):
 		run_scene()
+		hasClosed = true
 
 
 
 func _on_SpacecraftController_Init(_ship, _lvl):
 	ship = _ship
 	lvl = _lvl
+	hasClosed = false

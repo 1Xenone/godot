@@ -18,14 +18,27 @@ public class UserScript : Node
 		data.vSpeed += mars_gravity - thrust;
 		data.vDistance -= data.vSpeed;
 		return data;
-	}	
+	}
+	
+	bool NeedMaxPower(RocketData data)
+	{
+		while (data.vSpeed >= landing_speed)
+		{
+			data = OneSecondSimulation(data, 4);
+		}
+		bool hasCrashed = data.vDistance < 0;
 
+		return hasCrashed;
+	}
+
+	
 	// returns thrust value. Between 0 and 4
 	public int Update(double rocketSpeed, double distanceToPad)
 	{
-		if(distanceToPad < 280){
-			return 4;
-		}
-		return 0;
+		RocketData data;
+		data.vSpeed = rocketSpeed;
+		data.vDistance = distanceToPad;
+		
+		return NeedMaxPower(data) ? 4 : 0;
 	}
 }

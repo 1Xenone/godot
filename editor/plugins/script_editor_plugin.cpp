@@ -3248,14 +3248,14 @@ ScriptEditor::ScriptEditor(EditorNode *p_editor) {
 	add_child(main_container);
 
 	menu_hb = memnew(HBoxContainer);
-	main_container->add_child(menu_hb);
+	//main_container->add_child(menu_hb);
 
 	script_split = memnew(HSplitContainer);
 	main_container->add_child(script_split);
 	script_split->set_v_size_flags(SIZE_EXPAND_FILL);
 
 	list_split = memnew(VSplitContainer);
-	script_split->add_child(list_split);
+	//script_split->add_child(list_split);
 	list_split->set_v_size_flags(SIZE_EXPAND_FILL);
 
 	scripts_vbox = memnew(VBoxContainer);

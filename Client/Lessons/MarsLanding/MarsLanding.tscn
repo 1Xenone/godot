@@ -190,24 +190,24 @@ points = PoolVector2Array( 133, 133, 0, 133, 0, 0, 133, 0 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
-"frames": [ ExtResource( 1 ), ExtResource( 6 ) ],
-"loop": true,
-"name": "Speed2",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
 "loop": true,
 "name": "Speed3",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 3 ), ExtResource( 11 ) ],
-"loop": true,
-"name": "Speed4",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "Speed1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "Speed2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "Speed4",
 "speed": 5.0
 } ]
 
@@ -322,5 +322,5 @@ __meta__ = {
 
 [connection signal="area_shape_entered" from="Finish" to="Finish" method="_on_Finish_area_shape_entered"]
 [connection signal="Init" from="SpacecraftController" to="Finish" method="_on_SpacecraftController_Init"]
-[connection signal="Init" from="SpacecraftController" to="UI" method="_on_SpacecraftController_Init"]
 [connection signal="Init" from="SpacecraftController" to="Spacecraft" method="_on_SpacecraftController_Init"]
+[connection signal="Init" from="SpacecraftController" to="UI" method="_on_SpacecraftController_Init"]

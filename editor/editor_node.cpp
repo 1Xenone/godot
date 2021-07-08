@@ -7163,7 +7163,7 @@ EditorNode::EditorNode() {
 
 	bottom_panel = memnew(PanelContainer);
 	bottom_panel->add_style_override("panel", gui_base->get_stylebox("panel", "TabContainer"));
-	center_split->add_child(bottom_panel);
+	//center_split->add_child(bottom_panel);
 	center_split->set_dragger_visibility(SplitContainer::DRAGGER_HIDDEN);
 
 	bottom_panel_vb = memnew(VBoxContainer);
